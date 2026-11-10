@@ -35,8 +35,8 @@ def version_from_file(file: Path, pattern: str) -> str:
 
 def package_name(version: str) -> str:
     parts = version.split(".")
-    if len(parts) != 3 or any(not part.isdigit() or int(part) > 99 for part in parts):
-        fail("Release version must contain three numeric parts from 0 to 99")
+    if len(parts) != 3 or any(not part.isdigit() for part in parts):
+        fail("Release version must contain three numeric parts")
     return "so-short-code-" + ".".join(f"{int(part):02d}" for part in parts) + ".zip"
 
 

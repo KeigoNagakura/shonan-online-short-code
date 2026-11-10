@@ -56,7 +56,7 @@ define(
 // 現在のプラグインバージョン（ヘッダのVersionと揃える）
 define( 'SOSC_VERSION', '3.8.5' );
 // 更新サーバ：メタ情報JSONのURL
-define( 'SOSC_UPDATE_META_URL', SOSC_API_URL . 'out_source/so-short-code.json' );
+define( 'SOSC_UPDATE_META_URL', 'https://api.github.com/repos/KeigoNagakura/shonan-online-short-code/releases/latest' );
 
 /** ================================
  * その他設定
