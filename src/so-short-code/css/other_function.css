@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+/**
+ * --------------------------
+ * H1非表示
+ * --------------------------
+ */
+.none_h1 #main_content h1,
+.sosc-theme-twentytwentyfive.none_h1 main .wp-block-post-title {
+    display: none;
+}
+
+/**
+ * --------------------------
+ * コンテンツ上マージン非表示
+ * --------------------------
+ */
+.none_contents_tm #content {
+    padding-top: 0px;
+}
+
+.none_contents_tm #main_content .post_content {
+    margin-bottom: 0px;
+}
+
+/**
+ * --------------------------
+ * コンテンツ下マージン非表示
+ * --------------------------
+ */
+.none_contents_bm #content {
+	margin-bottom:0px;
+}
+
+/* Block-theme support is restricted to the selected page and theme. */
+.sosc-theme-twentytwentyfive.none_contents_tm .wp-site-blocks > main {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.sosc-theme-twentytwentyfive.none_contents_bm .wp-site-blocks > main {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.sosc-theme-twentytwentyfive.none_contents_bm .wp-site-blocks > main + footer {
+    margin-top: 0 !important;
+}
+
+/**
+ * --------------------------
+ * font変更
+ * --------------------------
+ */
+body.change_font_noto-serif-jp {
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
+}

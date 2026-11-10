@@ -1,0 +1,26 @@
+{
+  "name": "ShonanOnlineShortCode",
+  "version": "3.8.5",
+  "download_url": "https://api.shonan-online.com/out_source/so-short-code-03.08.05.zip",
+  "sha256": "5bc85e6c26cefa9d40b4c9bc2b3d54c041746aae7936ebca23f40bee0f1cdbc3",
+  "homepage": "https://shonan-online.co.jp",
+  "author": "ShonanOnline Keigo Nagakura",
+  "author_profile": "https://shonan-online.co.jp",
+  "requires": "6.0",
+  "tested": "7.0.3",
+  "requires_php": "7.4",
+  "last_updated": "2026-09-11",
+  "sections": {
+    "description": "",
+    "installation": "",
+    "changelog": ""
+  },
+  "banners": {
+    "low": "",
+    "high": ""
+  },
+  "icons": {
+    "1x": "",
+    "2x": ""
+  }
+}

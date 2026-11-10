@@ -1,0 +1,76 @@
+name: Plugin update release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*.[0-9]*.[0-9]*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: plugin-update-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: plugin-updates
+    timeout-minutes: 30
+    env:
+      SOSC_DEPLOY_TARGETS: ${{ secrets.SOSC_DEPLOY_TARGETS }}
+      SOSC_DEPLOY_SSH_KEY: ${{ secrets.SOSC_DEPLOY_SSH_KEY }}
+      SOSC_DEPLOY_KNOWN_HOSTS: ${{ secrets.SOSC_DEPLOY_KNOWN_HOSTS }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - name: Validate tag and deployment configuration
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+          python - <<'PY'
+          import json
+          import os
+          from scripts.publish_update_package import target
+
+          raw = os.environ.get('SOSC_DEPLOY_TARGETS', '')
+          if not raw or not os.environ.get('SOSC_DEPLOY_SSH_KEY') or not os.environ.get('SOSC_DEPLOY_KNOWN_HOSTS'):
+              raise SystemExit('Configure plugin-updates environment secrets before publishing')
+          targets = [target(item) for item in json.loads(raw)]
+          if not targets:
+              raise SystemExit('At least one update endpoint is required')
+          print(f'Validated {len(targets)} deployment target(s)')
+          PY
+      - name: Check PHP syntax
+        run: find src/so-short-code -name '*.php' -not -path '*/vendor/*' -print0 | xargs -0 -n1 php -l
+      - name: Install locked plugin dependencies
+        run: composer install --working-dir=src/so-short-code --no-dev --prefer-dist --no-interaction --no-progress --classmap-authoritative
+      - name: Build ZIP and per-host metadata
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+
+          targets = json.loads(os.environ['SOSC_DEPLOY_TARGETS'])
+          release_date = subprocess.check_output(['git', 'show', '-s', '--format=%cs', 'HEAD'], text=True).strip()
+          command = [sys.executable, 'scripts/build_update_package.py', '--tag', os.environ['GITHUB_REF_NAME'],
+                     '--release-date', release_date, '--output', '.local/release']
+          for item in targets:
+              command.extend(['--endpoint', item['endpoint']])
+          subprocess.run(command, check=True)
+          PY
+          python scripts/publish_update_package.py --package-dir .local/release --check-only
+      - name: Keep build artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: plugin-update-${{ github.ref_name }}
+          path: .local/release/
+          if-no-files-found: error
+      - name: Publish update files
+        run: python scripts/publish_update_package.py --package-dir .local/release
+      - name: Create GitHub Release
+        run: gh release create "$GITHUB_REF_NAME" .local/release/so-short-code-*.zip --title "$GITHUB_REF_NAME" --generate-notes --verify-tag

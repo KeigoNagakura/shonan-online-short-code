@@ -1,0 +1,17 @@
+/*フォーム幅を800pxに設定*/
+.sosc-contact-form .wpcf7-form {
+	max-width:800px;
+	width:100%;
+	margin:auto;
+}
+.sosc-contact-form .wpcf7-form p {
+	margin-bottom:30px;
+}
+.sosc-contact-form .wpcf7-form p input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
+.sosc-contact-form .wpcf7-form p textarea {
+	max-width:800px;
+	width:100%;
+}
+.sosc-contact-form .wpcf7-submit {
+	margin-left:72px;
+}

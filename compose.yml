@@ -1,0 +1,65 @@
+name: osaru-wp
+services:
+  phpmyadmin:
+    image: phpmyadmin:5.2.3-apache
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: wordpress
+      PMA_PASSWORD: ${WP_DB_PASSWORD:?Use the workspace startup script}
+      PMA_ABSOLUTE_URI: http://localhost:8080/
+      UPLOAD_LIMIT: 128M
+    ports:
+      - '127.0.0.1:8080:80'
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  db:
+    image: mysql:8.4.11
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: ${WP_DB_PASSWORD:?Use the workspace startup script}
+      MYSQL_ROOT_PASSWORD: ${WP_ROOT_PASSWORD:?Use the workspace startup script}
+    volumes:
+      - database:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [CMD-SHELL, 'MYSQL_PWD="$$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u wordpress wordpress -e "SELECT 1" >/dev/null']
+      interval: 5s
+      timeout: 5s
+      retries: 40
+    restart: unless-stopped
+  web:
+    build:
+      context: .
+      dockerfile: server/docker/Dockerfile
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ${WP_DB_PASSWORD:?Use the workspace startup script}
+      WP_LOCAL_SALT: ${WP_LOCAL_SALT:?Use the workspace startup script}
+      WP_LOCAL_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD:?Use the workspace startup script}
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
+      COMPOSER_CAFILE: /etc/ssl/certs/ca-certificates.crt
+    ports:
+      - '127.0.0.1:80:80'
+      - '127.0.0.1:443:443'
+    volumes:
+      - wordpress:/var/www/html
+      - ./.local/tls:/etc/apache2/local-ssl:ro
+      - ./src/so-short-code:/var/www/html/wp-content/plugins/so-short-code
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD-SHELL, 'curl --fail --silent --insecure https://localhost/wp-login.php >/dev/null']
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+volumes:
+  database:
+  wordpress:

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Shonan Online Short Code</title>
+  <rect width="512" height="512" rx="96" fill="#1266a8"/>
+  <path d="M72 302c56-70 111-70 167 0s111 70 201 0v70c-90 70-145 70-201 0S128 302 72 372v-70z" fill="#fff" opacity=".92"/>
+  <text x="256" y="230" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="150" font-weight="700">SO</text>
+</svg>

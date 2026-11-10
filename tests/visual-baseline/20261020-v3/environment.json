@@ -1,0 +1,17 @@
+{
+  "captured_at_jst": "2026-10-20",
+  "site": "https://localhost/",
+  "compose_project": "osaru-wp",
+  "wordpress": "7.1.3",
+  "theme": { "name": "swell", "version": "2.15.0" },
+  "plugins_relevant_to_capture": {
+    "so-short-code": "3.8.5",
+    "usc-e-shop": "2.12.5"
+  },
+  "browser": "Chrome/155.0.8059.85",
+  "fixture": "../../visual-fixture.php",
+  "viewport_widths_front_px": [320, 390, 768, 1280],
+  "viewport_widths_admin_px": [320, 390, 1280],
+  "capture_condition": "公開画面の遅延画像を読み込み、ページ先頭へ戻して2秒待機。撮影中だけテーマの#pagetopを非表示にする。ショートコード領域には変更を加えない。",
+  "notes": "固定サンプル15ショートコードの公開画面72枚と管理画面3タブ9枚。旧基準20261020は保持。"
+}

@@ -1,0 +1,135 @@
+@charset "UTF-8";
+/* ピクセル */
+.sosc-bs-scope .mt-n10p>img {
+  margin-top: -10px;
+}
+
+.sosc-bs-scope .mt-n20p>img {
+  margin-top: -20px;
+}
+
+.sosc-bs-scope .mt-n30p>img {
+  margin-top: -30px;
+}
+
+.sosc-bs-scope .mt-n40p>img {
+  margin-top: -40px;
+}
+
+.sosc-bs-scope .mt-n50p>img {
+  margin-top: -50px;
+}
+
+.sosc-bs-scope .mt-n60p>img {
+  margin-top: -60px;
+}
+
+.sosc-bs-scope .mt-n70p>img {
+  margin-top: -70px;
+}
+
+.sosc-bs-scope .mt-n80p>img {
+  margin-top: -80px;
+}
+
+.sosc-bs-scope .mt-n90p>img {
+  margin-top: -90px;
+}
+
+.sosc-bs-scope .mt-n100p>img {
+  margin-top: -100px;
+}
+
+.sosc-bs-scope .mt-n150p>img {
+  margin-top: -150px;
+}
+
+.sosc-bs-scope .mt-n300p>img {
+  margin-top: -300px;
+}
+
+.sosc-bs-scope .table-wrap,
+.wrap .sosc-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 575.98px) {
+  .sosc-bs-scope .sosc-shortcode-table-wrap::before {
+    content: "一覧表は左右にスクロールできます";
+    display: block;
+    padding: 0.5rem 0;
+    color: #50575e;
+  }
+
+  .sosc-bs-scope .sosc-shortcode-table {
+    min-width: 800px;
+  }
+
+  .sosc-bs-scope .sosc-shortcode-table th:first-child {
+    min-width: 80px;
+  }
+
+  .sosc-bs-scope .sosc-shortcode-table th:nth-child(2) {
+    min-width: 120px;
+  }
+}
+
+/* Keep each setting and its controls readable on a narrow admin screen. */
+@media (max-width: 575.98px) {
+  .sosc-bs-scope .sosc-settings-table,
+  .sosc-bs-scope .sosc-settings-table > tbody,
+  .sosc-bs-scope .sosc-settings-table > tbody > tr,
+  .sosc-bs-scope .sosc-settings-table > tbody > tr > td {
+    display: block;
+    width: 100%;
+  }
+
+  .sosc-bs-scope .sosc-settings-table > thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .sosc-bs-scope .sosc-settings-table > tbody > tr {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #c3c4c7;
+  }
+
+  .sosc-bs-scope .sosc-settings-table > tbody > tr > td {
+    border: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .sosc-bs-scope .sosc-settings-table > tbody > tr > td:first-child {
+    font-weight: 600;
+    padding-top: 0.75rem;
+  }
+
+  .sosc-bs-scope .sosc-settings-table input[type="password"],
+  .sosc-bs-scope .sosc-settings-table input[type="text"],
+  .sosc-bs-scope .sosc-settings-table select {
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 782px) {
+  .wrap > .widefat,
+  .wrap > form > .widefat {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .nav-tab-wrapper,
+  .sosc-bs-scope [role="tablist"] {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,70 @@
+/* Welcartの表・色を保ち、店頭受け取りを選べる配送画面だけ読みやすくする。 */
+#delivery-info.sosc-pickup-layout .customer_form {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Welcartは各項目を別表にするため、対象表の列幅を同じ基準で固定する。 */
+#delivery-info.sosc-pickup-layout #time,
+#delivery-info.sosc-pickup-layout #custom_order,
+#delivery-info.sosc-pickup-layout #notes_table {
+    table-layout: fixed;
+}
+
+#delivery-info.sosc-pickup-layout .customer_form th,
+#delivery-info.sosc-pickup-layout .customer_form td {
+    box-sizing: border-box;
+    padding: 8px 10px;
+    font-size: 14px;
+}
+
+#delivery-info.sosc-pickup-layout #time th,
+#delivery-info.sosc-pickup-layout #custom_order th,
+#delivery-info.sosc-pickup-layout #notes_table th {
+    width: 32%;
+    overflow-wrap: anywhere;
+}
+
+#delivery-info.sosc-pickup-layout .customer_form select,
+#delivery-info.sosc-pickup-layout .customer_form input:not([type="radio"]) {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: 36px;
+    font-size: 14px;
+}
+
+#delivery-info.sosc-pickup-layout .customer_form input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+}
+
+#delivery-info.sosc-pickup-layout .customer_form label,
+#delivery-info.sosc-pickup-layout .customer_form dt,
+#delivery-info.sosc-pickup-layout .customer_form dd {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    #delivery-info.sosc-pickup-layout #time th,
+    #delivery-info.sosc-pickup-layout #custom_order th,
+    #delivery-info.sosc-pickup-layout #notes_table th {
+        width: 46%;
+    }
+
+    #delivery-info.sosc-pickup-layout #delivery_method_select,
+    #delivery-info.sosc-pickup-layout #delivery_date_select,
+    #delivery-info.sosc-pickup-layout #delivery_time_select,
+    #delivery-info.sosc-pickup-layout #delivery_table input:not([type="radio"]) {
+        width: 100%;
+    }
+
+    #delivery-info.sosc-pickup-layout .customer_form dt label,
+    #delivery-info.sosc-pickup-layout .customer_form td > label {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        gap: 6px;
+    }
+}

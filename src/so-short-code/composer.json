@@ -1,0 +1,6 @@
+{
+    "require": {
+        "dvdoug/boxpacker": "3.12.1",
+        "psr/log": "1.1.4"
+    }
+}

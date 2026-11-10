@@ -1,0 +1,167 @@
+@charset "UTF-8";
+
+/* 初期実装の外部 common.css 依存を、ショートコード内の共通スタイルで維持する。 */
+.sosc-bs-scope .img_frame1_1,
+.sosc-bs-scope .img_frame6_4,
+.sosc-bs-scope .img_frame16_9 {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.sosc-bs-scope .img_frame1_1 {
+    padding-bottom: 100%;
+}
+
+.sosc-bs-scope .img_frame6_4 {
+    padding-top: 66.666667%;
+}
+
+.sosc-bs-scope .img_frame16_9 {
+    padding-top: 56.25%;
+}
+
+.sosc-bs-scope .img_frame1_1 > .frame_over,
+.sosc-bs-scope .img_frame6_4 > .frame_over,
+.sosc-bs-scope .img_frame16_9 > .frame_over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+}
+
+.sosc-bs-scope .frame_max_hover20 {
+    transition: transform 0.3s ease;
+}
+
+.sosc-bs-scope .frame_max_hover20:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.sosc-bs-scope .opacity-hover6 {
+    transition: opacity 0.25s ease;
+}
+
+.sosc-bs-scope .opacity-hover6:hover {
+    opacity: 0.6;
+}
+
+.sosc-bs-scope .multi_line_truncate_of_1,
+.sosc-bs-scope .multi_line_truncate_of_2,
+.sosc-bs-scope .multi_line_truncate_of_5 {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+.sosc-bs-scope .multi_line_truncate_of_1 {
+    -webkit-line-clamp: 1;
+}
+
+.sosc-bs-scope .multi_line_truncate_of_2 {
+    -webkit-line-clamp: 2;
+}
+
+.sosc-bs-scope .multi_line_truncate_of_5 {
+    -webkit-line-clamp: 5;
+}
+
+.sosc_tag_view01 .badge-with-hole {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3em 0.6em 0.3em 1em;
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: normal;
+    max-width: calc(100% - 0.5rem);
+    overflow-wrap: anywhere;
+}
+
+.sosc_tag_view01 .badge-with-hole::before {
+    content: "";
+    position: absolute;
+    left: 0.3em;
+    width: 0.3em;
+    height: 0.3em;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+}
+
+.sosc_tag_view01 .badg {
+    transition: transform 0.3s ease;
+}
+
+.sosc_tag_view01 .badg:hover {
+    transform: scale(1.1);
+}
+
+.sosc_info_list05 .cursor-pointer {
+    cursor: pointer;
+}
+
+.sosc_info_list01,
+.sosc_info_list02,
+.sosc_info_list03,
+.sosc_info_list05,
+.sosc_wc_item_card01,
+.sosc_wc_item_card02,
+.sosc_wc_item_card03 {
+    overflow-wrap: anywhere;
+}
+
+/** ===========================================
+ * sosc_info_list05
+ * お知らせ05用
+ =========================================== **/
+.sosc-bs-scope .infolist_mouse_over:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+@media (max-width: 575.98px) {
+    .sosc_info_list03 .sosc-info-head {
+        display: none;
+    }
+
+    .sosc_info_list03 .row.w-100 {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .sosc_info_list03 > .row > .col-12 {
+        padding: 0 !important;
+    }
+
+    .sosc_info_list03 a > .row {
+        gap: 0.4em;
+    }
+
+    .sosc_info_list03 a > .row > div {
+        width: 100%;
+    }
+
+    .sosc_info_list03 a > .row > .col-5 {
+        order: -1;
+        font-weight: 600;
+        margin-bottom: 0.3em;
+    }
+
+    .sosc_info_list03 [data-label] {
+        display: grid;
+        grid-template-columns: 5em minmax(0, 1fr);
+        gap: 0.5em;
+    }
+
+    .sosc_info_list03 [data-label]::before {
+        content: attr(data-label);
+        font-weight: 600;
+    }
+}

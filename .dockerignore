@@ -1,0 +1,18 @@
+.git
+.local
+db
+log
+site/wp-config.php
+site/.htaccess
+site/wp-content/uploads
+site/wp-content/cache
+site/wp-content/sosc-backups
+src
+**/*_old*
+**/*.key
+**/*.pem
+**/*.pfx
+
+# Only Docker assets belong in the build context; exclude actual server data.
+server/*
+!server/docker/

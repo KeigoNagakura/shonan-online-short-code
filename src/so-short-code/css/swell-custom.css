@@ -1,0 +1,101 @@
+/** ===========================================
+ * virtical-text
+ * SWELLのバナーリンクの文字縦書き中央寄せ
+ =========================================== **/
+.swell-block-bannerLink.virtical-text .c-bannerLink{
+  position: relative;
+}
+/* テキストボックスを「強制的に」ど真ん中へ */
+.swell-block-bannerLink.virtical-text .c-bannerLink__text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* SWELL側の寄せ/幅指定を潰す */
+  right: auto !important;
+  margin: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  text-align: center !important;
+  /* 縦書き */
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  /* 中の要素を中央にまとめる */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px; /* タイトルとサブの間隔 */
+}
+/* タイトル・サブ側も余計なマージンを潰す */
+.swell-block-bannerLink.virtical-text .c-bannerLink__title,
+.swell-block-bannerLink.virtical-text .c-bannerLink__description{
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center !important;
+}
+
+/** ===========================================
+ * sosc-reveal-media
+ * SWELLのバナーリンクの文字縦書き中央寄せ
+ =========================================== **/
+.wp-block-media-text.sosc-reveal-media.sosc-reveal-ready .wp-block-media-text__media,
+.wp-block-media-text.sosc-reveal-media.sosc-reveal-ready .wp-block-media-text__content{
+  opacity: 0 !important;
+  transition:
+    opacity 2000ms ease,
+    transform 2360ms cubic-bezier(.2,.7,.2,1) !important;
+  will-change: opacity, transform;
+}
+/* 通常：メディア左 / コンテンツ右 */
+.wp-block-media-text.sosc-reveal-media.sosc-reveal-ready:not(.has-media-on-the-right) .wp-block-media-text__media{
+  transform: translate3d(-40px,0,0) !important;
+}
+.wp-block-media-text.sosc-reveal-media.sosc-reveal-ready:not(.has-media-on-the-right) .wp-block-media-text__content{
+  transform: translate3d(40px,0,0) !important;
+  transition-delay: 120ms;
+}
+/* 右メディア：逆 */
+.wp-block-media-text.sosc-reveal-media.sosc-reveal-ready.has-media-on-the-right .wp-block-media-text__media{
+  transform: translate3d(180px,0,0) !important;
+}
+.wp-block-media-text.sosc-reveal-media.sosc-reveal-ready.has-media-on-the-right .wp-block-media-text__content{
+  transform: translate3d(-180px,0,0) !important;
+  transition-delay: 120ms;
+}
+/* 表示状態 */
+.wp-block-media-text.sosc-reveal-media.is-inview .wp-block-media-text__media,
+.wp-block-media-text.sosc-reveal-media.is-inview .wp-block-media-text__content{
+  opacity: 1 !important;
+  transform: translate3d(0,0,0) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wp-block-media-text.sosc-reveal-media .wp-block-media-text__media,
+  .wp-block-media-text.sosc-reveal-media .wp-block-media-text__content {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/** ===========================================
+ * sosc-h2-type01
+ * SWELLのh2タグ書き換え用クラス
+ =========================================== **/
+/* SWELL h2 装飾リセット込み */
+.post_content h2.sosc_h2_sw_type1 {
+  position: relative;
+  padding: 0.35em 0 0.35em 0.8em;
+  border-left: 8px solid #0085a2;
+  border-bottom: 2px solid #0085a2;
+  border-top: none;
+  border-right: none;
+  background: transparent;
+  box-shadow: none;
+  line-height: 1.5;
+}
+.post_content h2.sosc_h2_sw_type1::before,
+.post_content h2.sosc_h2_sw_type1::after {
+  content: none;
+}
+

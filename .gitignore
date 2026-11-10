@@ -1,0 +1,61 @@
+# 秘密情報・環境固有設定
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+
+# 依存物・仮想環境
+node_modules/
+vendor/
+.venv/
+venv/
+
+# 実行時データ
+/log/
+*.log
+
+# IDE・OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# キャッシュ
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# WordPress環境固有設定・実データ・バックアップ
+/site/wp-config.php
+/site/.htaccess
+/site/wp-content/uploads/
+/site/wp-content/cache/
+/db/
+*.sql
+*.sql.gz
+*.zip
+*.tar.gz
+
+# 旧データ（内容を保持してGit管理から除外）
+*_[oO][lL][dD]
+*_[oO][lL][dD].*
+*_[oO][lL][dD]_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*
+*_[oO][lL][dD][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*
+
+# WordPress本体に同梱されたJavaScript依存物
+!/site/wp-includes/js/dist/vendor/
+
+# Local Docker credentials and generated backup archives
+/.local/
+/server/docker/local-ca.crt
+/site/wp-content/sosc-backups/
+*.zip.php
+
+# 開発DBのスナップショットはローカルだけに保持する
+/server/db_dump/

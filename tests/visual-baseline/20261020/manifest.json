@@ -1,0 +1,749 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "site": "local Docker osaru-wp",
+  "fixture": "tests/visual-fixture.php",
+  "viewports": [
+    320,
+    390,
+    768,
+    1280
+  ],
+  "files": {
+    "src/so-short-code/css/bootstrap.scoped.min.css": "8483c94c74d33160252412f8c8c57e13ab35e19d74a64761b458e0920bb968e4",
+    "src/so-short-code/css/short-code.css": "9d128912e38c46ea85fd2371f01266b3f384e72a1c65ea67ed58f5bec70a10ae",
+    "tests/visual-fixture.php": "eebaa3d33f2bc8a5f7d6c2c55dc60181e5c31de9b2f3f23c1d517adfd358b8fd",
+    "src/so-short-code/css/sosc-common.css": "b1e0ea7aa7bb9124b01f66e22f17a2f19ac211705496013039523897a846ff89",
+    "src/so-short-code/view/panel/short_code_view.php": "79eb5176ceea25a71c914b8abbe6474d296792a6939d6365a127fba15e97e453",
+    "src/so-short-code/view/panel/short_code_wc_view.php": "efe3f8d8000e01a5c771f96cdea3a3702527a02c78c4a1a369e898abdf2852ce"
+  },
+  "captures": [
+    {
+      "file": "info-320-page.png",
+      "sha256": "9720db7cfd9acd07b7dccc8d725632c5c4b8094b4e220dad3f846afe7f2378e3",
+      "width": 320,
+      "height": 2686,
+      "fullPage": true,
+      "viewport": 320,
+      "page": "info",
+      "scrollWidth": 320
+    },
+    {
+      "file": "info-320-sosc_info_list01.png",
+      "sha256": "a342f014cac66fd224cd74a3e46a5f52a79ef2df63bc12374270fb5b04c807e6",
+      "width": 296,
+      "height": 173,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "info",
+      "case": "sosc_info_list01"
+    },
+    {
+      "file": "info-320-sosc_info_list02.png",
+      "sha256": "f8159a98df7ed2e4724ce826197301c7e8e82f043d143c0c6ecdc0892bdff7a8",
+      "width": 296,
+      "height": 169,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "info",
+      "case": "sosc_info_list02"
+    },
+    {
+      "file": "info-320-sosc_info_list03.png",
+      "sha256": "8dfd97f24d36e4e87fda1b879c9ec197c981985918883e26c7e04b6a6cf4c3f1",
+      "width": 296,
+      "height": 404,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "info",
+      "case": "sosc_info_list03"
+    },
+    {
+      "file": "info-320-sosc_info_list04.png",
+      "sha256": "06c8b3e95e8bfc107342c70f25dbdb46bd2d79c46a43ba110360e3eb72a9c17e",
+      "width": 296,
+      "height": 553,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "info",
+      "case": "sosc_info_list04"
+    },
+    {
+      "file": "info-320-sosc_info_list05.png",
+      "sha256": "21ffb3c1597c62beecf7db7feb74c770360e4e213cf103a84ddec29f832e020b",
+      "width": 296,
+      "height": 158,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "info",
+      "case": "sosc_info_list05"
+    },
+    {
+      "file": "cards-320-page.png",
+      "sha256": "659f57db660689f3d30d2cd924509c757a2fcb676b21eed25f7dfc4a6926b6fe",
+      "width": 320,
+      "height": 1667,
+      "fullPage": true,
+      "viewport": 320,
+      "page": "cards",
+      "scrollWidth": 320
+    },
+    {
+      "file": "cards-320-sosc_blog_card01.png",
+      "sha256": "efed550262feae89c35d86ffbf93acd06fae4430a244e8e4d8b81cadfd4d49da",
+      "width": 296,
+      "height": 320,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "cards",
+      "case": "sosc_blog_card01"
+    },
+    {
+      "file": "cards-320-sosc_tag_view01.png",
+      "sha256": "3f46b502a51e81960d2c2fa355bb3f42714b6ff1df75c2377f562f6e09a8f24f",
+      "width": 296,
+      "height": 125,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "cards",
+      "case": "sosc_tag_view01"
+    },
+    {
+      "file": "cards-320-sosc_target_content.png",
+      "sha256": "f9ab9f5fa5b6f5f9bc1d4600d684608b3829133032d2161a4b929ab6f476c30f",
+      "width": 296,
+      "height": 115,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "cards",
+      "case": "sosc_target_content"
+    },
+    {
+      "file": "welcart-320-page.png",
+      "sha256": "d1c7bd7872174dca76c55f943222d1345096b2d50a68f99106d36499e3dafe53",
+      "width": 320,
+      "height": 3546,
+      "fullPage": true,
+      "viewport": 320,
+      "page": "welcart",
+      "scrollWidth": 320
+    },
+    {
+      "file": "welcart-320-sosc_wc_item_list01.png",
+      "sha256": "0852e9da071932387ffae440281514e36ffd721347f6e7ca36961e0afe0954f9",
+      "width": 296,
+      "height": 167,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "welcart",
+      "case": "sosc_wc_item_list01"
+    },
+    {
+      "file": "welcart-320-sosc_wc_item_list02.png",
+      "sha256": "aa5e3ac9d28458e8bf43adf08aebc5cb97881673a892773b1974a8b281fc1a6c",
+      "width": 296,
+      "height": 282,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "welcart",
+      "case": "sosc_wc_item_list02"
+    },
+    {
+      "file": "welcart-320-sosc_wc_item_list03.png",
+      "sha256": "0078b5a36456096835d6cad84ed1f16eacb3b8d7ef2c06e62e2a12d7f8a6159e",
+      "width": 296,
+      "height": 280,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "welcart",
+      "case": "sosc_wc_item_list03"
+    },
+    {
+      "file": "welcart-320-sosc_wc_item_card01.png",
+      "sha256": "dd029d3b457fb2a98bcc1eefccaaaeae093e6679a7890bfe7f802f4dc2aa1242",
+      "width": 296,
+      "height": 189,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "welcart",
+      "case": "sosc_wc_item_card01"
+    },
+    {
+      "file": "welcart-320-sosc_wc_item_card02.png",
+      "sha256": "3bc1bbdea86f100fe9304239f68200174a6899ba2c92a88d641f4169dbe141e2",
+      "width": 296,
+      "height": 460,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "welcart",
+      "case": "sosc_wc_item_card02"
+    },
+    {
+      "file": "welcart-320-sosc_wc_item_card03.png",
+      "sha256": "142de071ffe5f3ac045a51ca49a50758a9f7959545b19852b7636936adf4c949",
+      "width": 296,
+      "height": 457,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "welcart",
+      "case": "sosc_wc_item_card03"
+    },
+    {
+      "file": "welcart-320-sosc_wc_documents.png",
+      "sha256": "7105a86c08261cc9e993dbadc9073729d2a4e549c05726ae825e950364d0fb11",
+      "width": 296,
+      "height": 363,
+      "fullPage": false,
+      "viewport": 320,
+      "page": "welcart",
+      "case": "sosc_wc_documents"
+    },
+    {
+      "file": "info-390-page.png",
+      "sha256": "174304e9d7f41a15cb24be59276c89b5125e3328404a1245e36968de426a2d74",
+      "width": 390,
+      "height": 3247,
+      "fullPage": true,
+      "viewport": 390,
+      "page": "info",
+      "scrollWidth": 390
+    },
+    {
+      "file": "info-390-sosc_info_list01.png",
+      "sha256": "1e1f044927b94496fd94a5c843bdddfdb7824941e0ceac64acd30966a936abb2",
+      "width": 360,
+      "height": 210,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "info",
+      "case": "sosc_info_list01"
+    },
+    {
+      "file": "info-390-sosc_info_list02.png",
+      "sha256": "46f9317d2345087d3cfa4d6c7e9af844f33988e87efe32eba26f9d2d4310eec0",
+      "width": 360,
+      "height": 205,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "info",
+      "case": "sosc_info_list02"
+    },
+    {
+      "file": "info-390-sosc_info_list03.png",
+      "sha256": "20cadb1f42ee9c81570d1ddfbba483f598949cad39e8c166f87ae23d109ee626",
+      "width": 360,
+      "height": 493,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "info",
+      "case": "sosc_info_list03"
+    },
+    {
+      "file": "info-390-sosc_info_list04.png",
+      "sha256": "2f950d874766d9e2d8b6a5c36073fb42b8655b91907d374f4e7fb9a422766f83",
+      "width": 360,
+      "height": 674,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "info",
+      "case": "sosc_info_list04"
+    },
+    {
+      "file": "info-390-sosc_info_list05.png",
+      "sha256": "856b183966e0450f48375b77198d30131ca390d6fd66e90d71c942b6eb2714cc",
+      "width": 360,
+      "height": 192,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "info",
+      "case": "sosc_info_list05"
+    },
+    {
+      "file": "cards-390-page.png",
+      "sha256": "7607f4d1fc11dce85e4347d09435b2f728b215c5b84549db7909646c0d38da8f",
+      "width": 390,
+      "height": 2007,
+      "fullPage": true,
+      "viewport": 390,
+      "page": "cards",
+      "scrollWidth": 390
+    },
+    {
+      "file": "cards-390-sosc_blog_card01.png",
+      "sha256": "ed007da342de94c5d9828ff82e5001717df0117f1ac51e9f218b98ddcfcce55a",
+      "width": 360,
+      "height": 389,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "cards",
+      "case": "sosc_blog_card01"
+    },
+    {
+      "file": "cards-390-sosc_tag_view01.png",
+      "sha256": "def3b0345283889281af642d9a7b4e829c9401112f8c70165b8a872a339fd5e0",
+      "width": 360,
+      "height": 152,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "cards",
+      "case": "sosc_tag_view01"
+    },
+    {
+      "file": "cards-390-sosc_target_content.png",
+      "sha256": "f95edee15ef6f2662d04d415bf499195218770d3e0170d73b3c795d817816ed8",
+      "width": 360,
+      "height": 140,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "cards",
+      "case": "sosc_target_content"
+    },
+    {
+      "file": "welcart-390-page.png",
+      "sha256": "31caee90abfb270299b8a667018887a151ff28b07dbd43c819f79d6bda480d74",
+      "width": 390,
+      "height": 4295,
+      "fullPage": true,
+      "viewport": 390,
+      "page": "welcart",
+      "scrollWidth": 390
+    },
+    {
+      "file": "welcart-390-sosc_wc_item_list01.png",
+      "sha256": "d6a26358dcdc0509a43563fec70fd820dd769091c0dbd56b5fa0ad874effdfe0",
+      "width": 360,
+      "height": 203,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "welcart",
+      "case": "sosc_wc_item_list01"
+    },
+    {
+      "file": "welcart-390-sosc_wc_item_list02.png",
+      "sha256": "68a23c62df3adf10ebce8cd2fed3a47a7165993afb33ee2ebfde544d27855a51",
+      "width": 360,
+      "height": 344,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "welcart",
+      "case": "sosc_wc_item_list02"
+    },
+    {
+      "file": "welcart-390-sosc_wc_item_list03.png",
+      "sha256": "1d4ee859af44231d5850f3ba5a5099c388aa7fd96f9875f6e50921cacbf1460c",
+      "width": 360,
+      "height": 340,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "welcart",
+      "case": "sosc_wc_item_list03"
+    },
+    {
+      "file": "welcart-390-sosc_wc_item_card01.png",
+      "sha256": "002cea729ba63fbd08705a85dcc09250f0520f4f287647cdbdc53aeede117ac6",
+      "width": 360,
+      "height": 230,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "welcart",
+      "case": "sosc_wc_item_card01"
+    },
+    {
+      "file": "welcart-390-sosc_wc_item_card02.png",
+      "sha256": "ca465a6c1f5033125e645e3dcfa91983724fcb93393afa17a8fc3c1a641317b6",
+      "width": 360,
+      "height": 560,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "welcart",
+      "case": "sosc_wc_item_card02"
+    },
+    {
+      "file": "welcart-390-sosc_wc_item_card03.png",
+      "sha256": "349f045263e713dba04fdc270ac2d3c6a637e949a4f15de7dd77ff0bc825ef40",
+      "width": 360,
+      "height": 557,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "welcart",
+      "case": "sosc_wc_item_card03"
+    },
+    {
+      "file": "welcart-390-sosc_wc_documents.png",
+      "sha256": "e7ec999a6a63c9ceba933c749ac805781df01d95a0fc935ea187b1bd6ed2ab85",
+      "width": 360,
+      "height": 439,
+      "fullPage": false,
+      "viewport": 390,
+      "page": "welcart",
+      "case": "sosc_wc_documents"
+    },
+    {
+      "file": "info-768-page.png",
+      "sha256": "1fd7989e2a96336956f91e9787eb2128b3b5496b7b1b8d32379e38c65b4e0acc",
+      "width": 768,
+      "height": 3167,
+      "fullPage": true,
+      "viewport": 768,
+      "page": "info",
+      "scrollWidth": 753
+    },
+    {
+      "file": "info-768-sosc_info_list01.png",
+      "sha256": "c40e41adff3851655f89ff4317e2a0f8d6c4ef1111004683df79e4a98478aeb5",
+      "width": 693,
+      "height": 215,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "info",
+      "case": "sosc_info_list01"
+    },
+    {
+      "file": "info-768-sosc_info_list02.png",
+      "sha256": "127713c7e7f5df73877da7cf425c8946a2efa29cf4432ed13f5254d632f95e65",
+      "width": 693,
+      "height": 208,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "info",
+      "case": "sosc_info_list02"
+    },
+    {
+      "file": "info-768-sosc_info_list03.png",
+      "sha256": "3869122bf373c7565ab765ed52591b83c3a5df2839499c58f57d283ceea953a2",
+      "width": 693,
+      "height": 432,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "info",
+      "case": "sosc_info_list03"
+    },
+    {
+      "file": "info-768-sosc_info_list04.png",
+      "sha256": "4d6f6432bda5d2e85dadbd30556b417701d59bd253d5f1fd4f4092af8675a013",
+      "width": 693,
+      "height": 393,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "info",
+      "case": "sosc_info_list04"
+    },
+    {
+      "file": "info-768-sosc_info_list05.png",
+      "sha256": "d028bf64ba144e418754ca504f358070fe18eae3b8097af98077e142f5ebafa3",
+      "width": 693,
+      "height": 194,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "info",
+      "case": "sosc_info_list05"
+    },
+    {
+      "file": "cards-768-page.png",
+      "sha256": "36a5b8bec598fa7ebacf644f77ceb770ecc53f1ef872d749576b7808bc0bd7af",
+      "width": 768,
+      "height": 2409,
+      "fullPage": true,
+      "viewport": 768,
+      "page": "cards",
+      "scrollWidth": 753
+    },
+    {
+      "file": "cards-768-sosc_blog_card01.png",
+      "sha256": "d24de4eca8547360681d36948fcf0dd4c6ade25da1e7698ff77a02a80645e3b8",
+      "width": 693,
+      "height": 578,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "cards",
+      "case": "sosc_blog_card01"
+    },
+    {
+      "file": "cards-768-sosc_tag_view01.png",
+      "sha256": "80ea539a93bae9b421e9ac258a178114d04d7f120db3284a0f6049954ea7bba0",
+      "width": 693,
+      "height": 148,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "cards",
+      "case": "sosc_tag_view01"
+    },
+    {
+      "file": "cards-768-sosc_target_content.png",
+      "sha256": "4a6ed8edd498707a502a70382a347a3be6eb8f73ec21bd8554b9db8783c667e2",
+      "width": 693,
+      "height": 134,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "cards",
+      "case": "sosc_target_content"
+    },
+    {
+      "file": "welcart-768-page.png",
+      "sha256": "6d777b9beced36bdc220f762713d00058a85aa5f062d1dfdc4c1593a2f0990e1",
+      "width": 768,
+      "height": 5457,
+      "fullPage": true,
+      "viewport": 768,
+      "page": "welcart",
+      "scrollWidth": 753
+    },
+    {
+      "file": "welcart-768-sosc_wc_item_list01.png",
+      "sha256": "41a8005c13f964926bbf897216571e4856dfbe866ccec8becd8b242ccbed0b55",
+      "width": 693,
+      "height": 246,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "welcart",
+      "case": "sosc_wc_item_list01"
+    },
+    {
+      "file": "welcart-768-sosc_wc_item_list02.png",
+      "sha256": "7f51eb4a0e7d4db5005c927361e5d1fbca5afe03a63ea005bc364aaa16d1e13e",
+      "width": 693,
+      "height": 421,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "welcart",
+      "case": "sosc_wc_item_list02"
+    },
+    {
+      "file": "welcart-768-sosc_wc_item_list03.png",
+      "sha256": "6fe159169762490394b6b7a92952f8b5f352f65c45c139965e53dba3f2b5ea19",
+      "width": 693,
+      "height": 417,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "welcart",
+      "case": "sosc_wc_item_list03"
+    },
+    {
+      "file": "welcart-768-sosc_wc_item_card01.png",
+      "sha256": "94ce2630a3dadb2120bd2632bbab5191075f653c882935210a5fe91a98e80343",
+      "width": 693,
+      "height": 245,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "welcart",
+      "case": "sosc_wc_item_card01"
+    },
+    {
+      "file": "welcart-768-sosc_wc_item_card02.png",
+      "sha256": "37dcc244a05b2def9510db3f63d5f158cf02daaaba5648f83050b73614176e7e",
+      "width": 693,
+      "height": 897,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "welcart",
+      "case": "sosc_wc_item_card02"
+    },
+    {
+      "file": "welcart-768-sosc_wc_item_card03.png",
+      "sha256": "b32d493db5709ddc9c01fcb9a746acafa83fd2f255a99fefeb94278107f10f03",
+      "width": 693,
+      "height": 894,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "welcart",
+      "case": "sosc_wc_item_card03"
+    },
+    {
+      "file": "welcart-768-sosc_wc_documents.png",
+      "sha256": "b5112fa6d1f66df0a9d2814a58f9b32bf1d586fdf40c692144088e403750260e",
+      "width": 693,
+      "height": 435,
+      "fullPage": false,
+      "viewport": 768,
+      "page": "welcart",
+      "case": "sosc_wc_documents"
+    },
+    {
+      "file": "info-1280-page.png",
+      "sha256": "e41389e3699b1ccbd924bafd85e0c45511fb8bc855533519a0a73e47ff2bddf1",
+      "width": 1280,
+      "height": 2196,
+      "fullPage": true,
+      "viewport": 1280,
+      "page": "info",
+      "scrollWidth": 1265
+    },
+    {
+      "file": "info-1280-sosc_info_list01.png",
+      "sha256": "a1b9e3a588492e144c2069cea36e42e12b2f67aa03ceea4569813382160ecf25",
+      "width": 781,
+      "height": 215,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "info",
+      "case": "sosc_info_list01"
+    },
+    {
+      "file": "info-1280-sosc_info_list02.png",
+      "sha256": "8e89fd0ad0cb90c094b9ccccf17e3110f096e91624647e54de3830c34c068862",
+      "width": 781,
+      "height": 208,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "info",
+      "case": "sosc_info_list02"
+    },
+    {
+      "file": "info-1280-sosc_info_list03.png",
+      "sha256": "9636b9015d34cde350562c8f0a1b0afd78850f31fe71fcdacbd7d447c058c993",
+      "width": 781,
+      "height": 400,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "info",
+      "case": "sosc_info_list03"
+    },
+    {
+      "file": "info-1280-sosc_info_list04.png",
+      "sha256": "d26fd6d585dd5441b547aa2e9ae97657ea0c22c1c088bc67d32ec62a89b28066",
+      "width": 781,
+      "height": 350,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "info",
+      "case": "sosc_info_list04"
+    },
+    {
+      "file": "info-1280-sosc_info_list05.png",
+      "sha256": "ee40e183e190b05259b517a909a1776ca65c5076473ba4fee5b3f7370c2e3a7b",
+      "width": 781,
+      "height": 194,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "info",
+      "case": "sosc_info_list05"
+    },
+    {
+      "file": "cards-1280-page.png",
+      "sha256": "7ed8d16280b3d4db5a180b1991a6a365b8908d413f7fba222b0c4f12e464ef1e",
+      "width": 1280,
+      "height": 1562,
+      "fullPage": true,
+      "viewport": 1280,
+      "page": "cards",
+      "scrollWidth": 1265
+    },
+    {
+      "file": "cards-1280-sosc_blog_card01.png",
+      "sha256": "3fc3d91a8176321548f950891c5d4f856764dab32d182727a161138f5a75f74f",
+      "width": 781,
+      "height": 628,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "cards",
+      "case": "sosc_blog_card01"
+    },
+    {
+      "file": "cards-1280-sosc_tag_view01.png",
+      "sha256": "73017c07ac69a80a36dabd9ec8795ea1ae2c3ec0b22986ad46bac47257492b7f",
+      "width": 781,
+      "height": 148,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "cards",
+      "case": "sosc_tag_view01"
+    },
+    {
+      "file": "cards-1280-sosc_target_content.png",
+      "sha256": "a4bc4458faa46c3783a633e0be6e542ee170ffecf9444ef7e1e9b332776c90f8",
+      "width": 781,
+      "height": 135,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "cards",
+      "case": "sosc_target_content"
+    },
+    {
+      "file": "welcart-1280-page.png",
+      "sha256": "37199b9c1448c31a09c89338d3786b24bed82f2cd5da1916f762dbdb941decdf",
+      "width": 1280,
+      "height": 4640,
+      "fullPage": true,
+      "viewport": 1280,
+      "page": "welcart",
+      "scrollWidth": 1265
+    },
+    {
+      "file": "welcart-1280-sosc_wc_item_list01.png",
+      "sha256": "368c20aee44e6f6fed6571ba75cc181ba313cfba3a31d6ef564a29dab43458d4",
+      "width": 781,
+      "height": 229,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "welcart",
+      "case": "sosc_wc_item_list01"
+    },
+    {
+      "file": "welcart-1280-sosc_wc_item_list02.png",
+      "sha256": "a56828e80ac5b07ba89b121e65a31dd82f93c793d711b4e79e93cdfa5e3ac228",
+      "width": 781,
+      "height": 419,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "welcart",
+      "case": "sosc_wc_item_list02"
+    },
+    {
+      "file": "welcart-1280-sosc_wc_item_list03.png",
+      "sha256": "47148bbee05c82afb313aca90511c8225772394fbf80a07b96c2321918348860",
+      "width": 781,
+      "height": 416,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "welcart",
+      "case": "sosc_wc_item_list03"
+    },
+    {
+      "file": "welcart-1280-sosc_wc_item_card01.png",
+      "sha256": "cb1a6413ff823037f190ab1322e68e66d3c0ca1adddfc2e88da5aed573388f13",
+      "width": 781,
+      "height": 229,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "welcart",
+      "case": "sosc_wc_item_card01"
+    },
+    {
+      "file": "welcart-1280-sosc_wc_item_card02.png",
+      "sha256": "15d9d135fe4305baa1869f99a217f200dd8551c1a6e14224990df2ac7e2f512b",
+      "width": 781,
+      "height": 955,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "welcart",
+      "case": "sosc_wc_item_card02"
+    },
+    {
+      "file": "welcart-1280-sosc_wc_item_card03.png",
+      "sha256": "60a23a2cfd4a2d15bb271ec60100ca45228cbb05282bd68e654f25ebce1e43d9",
+      "width": 781,
+      "height": 952,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "welcart",
+      "case": "sosc_wc_item_card03"
+    },
+    {
+      "file": "welcart-1280-sosc_wc_documents.png",
+      "sha256": "1e3a3d97ab71f6c3da0abdb72fd8cce8d503544007332aa9e6cdd3b4b444e87f",
+      "width": 781,
+      "height": 435,
+      "fullPage": false,
+      "viewport": 1280,
+      "page": "welcart",
+      "case": "sosc_wc_documents"
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/155.0.8059.85",
+    "revision": "@0e66b94549a8bd85f03fbdf189b752d6e7b63c32",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "jsVersion": "15.5.35.25"
+  }
+}
