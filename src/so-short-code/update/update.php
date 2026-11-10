@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 /**
  * Validate update metadata before WordPress is allowed to consume it.
  *
- * Update packages must remain on the configured update host and use HTTPS.
+ * Update packages must be release assets of the configured public repository.
  */
 function sosc_validate_update_meta($meta)
 {
@@ -22,15 +22,7 @@ function sosc_validate_update_meta($meta)
     if (!preg_match('/^[a-f0-9]{64}$/i', (string) $meta['sha256'])) {
         return false;
     }
-    $meta_url = wp_parse_url(SOSC_UPDATE_META_URL);
-    $package_url = wp_parse_url($meta['download_url']);
-    if (!is_array($meta_url) || !is_array($package_url)) {
-        return false;
-    }
-    if ('https' !== strtolower($package_url['scheme'] ?? '') || empty($package_url['host']) || !hash_equals(strtolower($meta_url['host'] ?? ''), strtolower($package_url['host']))) {
-        return false;
-    }
-    return sosc_is_managed_update_package($meta['download_url']);
+    return sosc_is_managed_update_package($meta['download_url'], $meta['version']);
 }
 
 /**
@@ -46,21 +38,45 @@ function sosc_update_display_url($value)
 /**
  * Determine whether a package URL belongs to this plugin's update channel.
  */
-function sosc_is_managed_update_package($package)
+function sosc_is_managed_update_package($package, $version = null)
 {
     if (!is_string($package)) return false;
-    $meta_url = wp_parse_url(SOSC_UPDATE_META_URL);
     $package_url = wp_parse_url((string) $package);
-    if (!is_array($meta_url) || !is_array($package_url)) {
+    if (!is_array($package_url)) {
         return false;
     }
-    if ('https' !== strtolower($package_url['scheme'] ?? '') || empty($package_url['host'])) {
+    if ('https' !== strtolower($package_url['scheme'] ?? '') || 'github.com' !== strtolower($package_url['host'] ?? '') || !empty($package_url['query']) || !empty($package_url['fragment'])) {
         return false;
     }
-    if (!hash_equals(strtolower($meta_url['host'] ?? ''), strtolower($package_url['host']))) {
-        return false;
+    $pattern = '#^/KeigoNagakura/shonan-online-short-code/releases/download/v([0-9]+\.[0-9]+\.[0-9]+)/so-short-code-([0-9]{2,})\.([0-9]{2,})\.([0-9]{2,})\.zip$#';
+    if (!preg_match($pattern, $package_url['path'] ?? '', $matches)) return false;
+    $asset_version = implode('.', array_map('intval', array_slice($matches, 2, 3)));
+    return $matches[1] === $asset_version && ($version === null || $matches[1] === $version);
+}
+
+/** Convert GitHub's latest release response into our verified update metadata. */
+function sosc_release_to_update_meta($release)
+{
+    if (!is_array($release) || !empty($release['draft']) || !empty($release['prerelease']) || !is_string($release['tag_name'] ?? null)) return null;
+    if (!preg_match('/^v([0-9]+\.[0-9]+\.[0-9]+)$/', $release['tag_name'], $match)) return null;
+    $version = $match[1];
+    foreach (($release['assets'] ?? []) as $asset) {
+        if (!is_array($asset) || ($asset['state'] ?? '') !== 'uploaded') continue;
+        $url = $asset['browser_download_url'] ?? '';
+        $digest = $asset['digest'] ?? '';
+        if (!is_string($url) || !sosc_is_managed_update_package($url, $version) || !is_string($digest) || !preg_match('/^sha256:([a-f0-9]{64})$/i', $digest, $hash)) continue;
+        $meta = [
+            'name' => 'ShonanOnlineShortCode', 'version' => $version,
+            'download_url' => $url, 'sha256' => strtolower($hash[1]),
+            'homepage' => 'https://github.com/KeigoNagakura/shonan-online-short-code',
+            'author' => 'ShonanOnline Keigo Nagakura',
+            'author_profile' => 'https://shonan-online.co.jp',
+            'requires' => '6.0', 'requires_php' => '7.4',
+            'last_updated' => substr((string) ($release['published_at'] ?? ''), 0, 10),
+        ];
+        return sosc_validate_update_meta($meta) ? $meta : null;
     }
-    return 1 === preg_match('#/so-short-code-[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.zip$#', $package_url['path'] ?? '');
+    return null;
 }
 
 /**
@@ -103,6 +119,14 @@ function sosc_verify_update_package($reply, $package)
     return $temporary_file;
 }
 add_filter('upgrader_pre_download', 'sosc_verify_update_package', 10, 2);
+
+/** Enable WordPress background updates for this plugin only. */
+add_filter('auto_update_plugin', function ($update, $item) {
+    if (is_object($item) && isset($item->plugin) && $item->plugin === SOSC_PLUGIN_BASENAME) {
+        return true;
+    }
+    return $update;
+}, 10, 2);
 /** ================================
  * 更新用データ
  ==================================*/
@@ -119,7 +143,8 @@ function sosc_fetch_update_meta()
     $args = [
         'timeout' => 10,
         'headers' => [
-            'Accept' => 'application/json',
+            'Accept' => 'application/vnd.github+json',
+            'User-Agent' => 'so-short-code WordPress updater',
         ],
     ];
     // 通信自体が失敗した場合（DNS/タイムアウト等）
@@ -136,7 +161,7 @@ function sosc_fetch_update_meta()
     }
     // レスポンスボディ（JSON文字列）を取得して配列に変換
     $body = wp_remote_retrieve_body($res);
-    $meta = json_decode($body, true);
+    $meta = sosc_release_to_update_meta(json_decode($body, true));
     // JSONの最低要件チェック
     if (!sosc_validate_update_meta($meta)) {
         set_site_transient($cache_key, null, 10 * MINUTE_IN_SECONDS);
