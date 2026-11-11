@@ -55,6 +55,14 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.sosc-bs-scope .sosc-shortcode-table th:first-child {
+  min-width: 80px;
+}
+
+.sosc-bs-scope .sosc-shortcode-table th:nth-child(2) {
+  min-width: 120px;
+}
+
 @media (max-width: 575.98px) {
   .sosc-bs-scope .sosc-shortcode-table-wrap::before {
     content: "一覧表は左右にスクロールできます";
@@ -67,13 +75,6 @@
     min-width: 800px;
   }
 
-  .sosc-bs-scope .sosc-shortcode-table th:first-child {
-    min-width: 80px;
-  }
-
-  .sosc-bs-scope .sosc-shortcode-table th:nth-child(2) {
-    min-width: 120px;
-  }
 }
 
 /* Keep each setting and its controls readable on a narrow admin screen. */

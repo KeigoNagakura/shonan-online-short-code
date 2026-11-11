@@ -499,12 +499,13 @@ final class WelcartIntegration {
 					array( '%d', '%s', '%s', '%s' ),
 					array( '%d' )
 				);
-				if ( 1 !== $result ) {
+				// An unchanged confirmed row is an idempotent retry, not a database failure.
+				if ( false === $result ) {
 					Database::log(
 						'order_registration_failed',
 						array(
 							'record_id' => (int) $record_id,
-							'db_error'  => (string) $wpdb->last_error,
+							'db_failed' => false === $result,
 						),
 						'error',
 						$order_id,
@@ -534,7 +535,7 @@ final class WelcartIntegration {
 				array( '%d', '%s', '%s', '%d', '%s', '%s', '%s' )
 			);
 			if ( false === $result ) {
-				Database::log( 'order_registration_failed', array( 'db_error' => (string) $wpdb->last_error ), 'error', $order_id, wp_generate_uuid4(), 365 );
+				Database::log( 'order_registration_failed', array( 'db_failed' => true ), 'error', $order_id, wp_generate_uuid4(), 365 );
 			}
 			return;
 		}
@@ -558,7 +559,7 @@ final class WelcartIntegration {
 				'order_registration_failed',
 				array(
 					'pre_order_hash' => hash( 'sha256', $pre_id ),
-					'db_error'       => (string) $wpdb->last_error,
+					'db_failed'      => true,
 				),
 				'error',
 				$order_id,

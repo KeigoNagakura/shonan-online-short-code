@@ -64,7 +64,7 @@ function sosc_set_value( $param_name, $param_value ) {
 			array( '%d' )
 		);
 		if ( false === $ok ) {
-			return new WP_Error( 'db_update_failed', $wpdb->last_error ? $wpdb->last_error : '更新に失敗しました' );
+			return new WP_Error( 'db_update_failed', '設定を更新できませんでした。' );
 		}
 		return 'updated';
 	} else {
@@ -77,7 +77,7 @@ function sosc_set_value( $param_name, $param_value ) {
 			array( '%s', '%s' )
 		);
 		if ( false === $ok ) {
-			return new WP_Error( 'db_insert_failed', $wpdb->last_error ? $wpdb->last_error : '登録に失敗しました' );
+			return new WP_Error( 'db_insert_failed', '設定を登録できませんでした。' );
 		}
 		return 'inserted';
 	}
@@ -98,7 +98,7 @@ function sosc_delete_by_name( $param_name ) {
 	$ok = $wpdb->delete( $table, array( 'param_name' => $param_name ), array( '%s' ) );
 
 	if ( false === $ok ) {
-		return new WP_Error( 'db_delete_failed', $wpdb->last_error ? $wpdb->last_error : '削除に失敗しました' );
+		return new WP_Error( 'db_delete_failed', '設定を削除できませんでした。' );
 	}
 	return (int) $ok; // 削除件数
 }

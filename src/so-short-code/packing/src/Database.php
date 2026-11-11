@@ -170,7 +170,7 @@ final class Database {
 			array( '%s', '%s', '%s', '%d', '%s', '%s', '%s' )
 		);
 		if ( false === $result ) {
-			error_log( 'ShonanOnlineShortCode packing log failure: ' . sanitize_key( $reason_code ) . ' / ' . $wpdb->last_error ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'ShonanOnlineShortCode packing log failure: ' . sanitize_key( $reason_code ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			return new \WP_Error( 'packing_log_failed', '箱詰めログを保存できませんでした。' );
 		}
 		return true;

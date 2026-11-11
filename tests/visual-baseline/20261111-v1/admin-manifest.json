@@ -1,0 +1,206 @@
+{
+  "browser": "Chrome/157.0.8103.39",
+  "captures": [
+    {
+      "file": "admin-shortcodes-320.png",
+      "tab": "tab-pane1",
+      "sha256": "b076d118f9d1b868dd59cb3d51eae07d67b089e8d16e15a76af7b69508db8bfd",
+      "url": "/wp-admin/admin.php",
+      "width": 320,
+      "scroll": 320,
+      "height": 1200,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": [
+        {
+          "tag": "TABLE",
+          "cls": "table table-striped fs-7 sosc-shortcode-table"
+        },
+        {
+          "tag": "THEAD",
+          "cls": ""
+        },
+        {
+          "tag": "TR",
+          "cls": ""
+        },
+        {
+          "tag": "TH",
+          "cls": "bg-head"
+        },
+        {
+          "tag": "TBODY",
+          "cls": ""
+        }
+      ]
+    },
+    {
+      "file": "admin-welcart-320.png",
+      "tab": "tab-pane2",
+      "sha256": "e812a4225cb81c4d1dc8713c0827251713fce4d673b828e764dad5533cd029a1",
+      "url": "/wp-admin/admin.php",
+      "width": 320,
+      "scroll": 320,
+      "height": 1200,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": [
+        {
+          "tag": "TABLE",
+          "cls": "table table-striped fs-7 sosc-shortcode-table"
+        },
+        {
+          "tag": "THEAD",
+          "cls": ""
+        },
+        {
+          "tag": "TR",
+          "cls": ""
+        },
+        {
+          "tag": "TH",
+          "cls": "bg-head"
+        },
+        {
+          "tag": "TBODY",
+          "cls": ""
+        }
+      ]
+    },
+    {
+      "file": "admin-other-320.png",
+      "tab": "tab-pane4",
+      "sha256": "eafc44e5e67c05b4a828a85599434c633ee896635910c5ed856eef5b8f4bcb8d",
+      "url": "/wp-admin/admin.php",
+      "width": 320,
+      "scroll": 320,
+      "height": 2084,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": []
+    },
+    {
+      "file": "admin-shortcodes-390.png",
+      "tab": "tab-pane1",
+      "sha256": "84853f315e283dd2769fcf0825b0738afe4b6dddcc510aa01b8a679bc137c7ae",
+      "url": "/wp-admin/admin.php",
+      "width": 390,
+      "scroll": 390,
+      "height": 1200,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": [
+        {
+          "tag": "TABLE",
+          "cls": "table table-striped fs-7 sosc-shortcode-table"
+        },
+        {
+          "tag": "THEAD",
+          "cls": ""
+        },
+        {
+          "tag": "TR",
+          "cls": ""
+        },
+        {
+          "tag": "TH",
+          "cls": "bg-head"
+        },
+        {
+          "tag": "TBODY",
+          "cls": ""
+        }
+      ]
+    },
+    {
+      "file": "admin-welcart-390.png",
+      "tab": "tab-pane2",
+      "sha256": "e6195b4e335420b4b1dfd862a374aefe333940b46089d8eb21dec2fd9bf3bdc5",
+      "url": "/wp-admin/admin.php",
+      "width": 390,
+      "scroll": 390,
+      "height": 1200,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": [
+        {
+          "tag": "TABLE",
+          "cls": "table table-striped fs-7 sosc-shortcode-table"
+        },
+        {
+          "tag": "THEAD",
+          "cls": ""
+        },
+        {
+          "tag": "TR",
+          "cls": ""
+        },
+        {
+          "tag": "TH",
+          "cls": "bg-head"
+        },
+        {
+          "tag": "TBODY",
+          "cls": ""
+        }
+      ]
+    },
+    {
+      "file": "admin-other-390.png",
+      "tab": "tab-pane4",
+      "sha256": "958d164b0635e95dd8e5bebd1c9dbddf165dfac832da67dbc8dccbd4d4ff6854",
+      "url": "/wp-admin/admin.php",
+      "width": 390,
+      "scroll": 390,
+      "height": 2479,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": []
+    },
+    {
+      "file": "admin-shortcodes-1280.png",
+      "tab": "tab-pane1",
+      "sha256": "6544f517e549360a4e38b6015e9fd0877bf23cdbaaef0bde8a6135788f28a500",
+      "url": "/wp-admin/admin.php",
+      "width": 1280,
+      "scroll": 1280,
+      "height": 1200,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": []
+    },
+    {
+      "file": "admin-welcart-1280.png",
+      "tab": "tab-pane2",
+      "sha256": "ebb205d7d24cb1027035177131d5d3730012ca7cedd73ef5ac7cf5302967cf9a",
+      "url": "/wp-admin/admin.php",
+      "width": 1280,
+      "scroll": 1280,
+      "height": 1200,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": []
+    },
+    {
+      "file": "admin-other-1280.png",
+      "tab": "tab-pane4",
+      "sha256": "a65e8f79d6cc840997039b92d523dc85907578de774b5ce1a2aa502b77737b52",
+      "url": "/wp-admin/admin.php",
+      "width": 1280,
+      "scroll": 1265,
+      "height": 1637,
+      "root": true,
+      "content": true,
+      "scopedCss": true,
+      "overflow": []
+    }
+  ]
+}

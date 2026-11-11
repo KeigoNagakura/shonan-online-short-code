@@ -45,7 +45,7 @@ function sosc_is_managed_update_package($package, $version = null)
     if (!is_array($package_url)) {
         return false;
     }
-    if ('https' !== strtolower($package_url['scheme'] ?? '') || 'github.com' !== strtolower($package_url['host'] ?? '') || !empty($package_url['query']) || !empty($package_url['fragment'])) {
+    if ('https' !== strtolower($package_url['scheme'] ?? '') || 'github.com' !== strtolower($package_url['host'] ?? '') || isset($package_url['user']) || isset($package_url['pass']) || isset($package_url['port']) || isset($package_url['query']) || isset($package_url['fragment'])) {
         return false;
     }
     $pattern = '#^/KeigoNagakura/shonan-online-short-code/releases/download/v([0-9]+\.[0-9]+\.[0-9]+)/so-short-code-([0-9]{2,})\.([0-9]{2,})\.([0-9]{2,})\.zip$#';
@@ -71,7 +71,7 @@ function sosc_release_to_update_meta($release)
             'homepage' => 'https://github.com/KeigoNagakura/shonan-online-short-code',
             'author' => 'ShonanOnline Keigo Nagakura',
             'author_profile' => 'https://shonan-online.co.jp',
-            'requires' => '6.0', 'requires_php' => '7.4',
+            'requires' => '6.0', 'requires_php' => '8.2',
             'last_updated' => substr((string) ($release['published_at'] ?? ''), 0, 10),
         ];
         return sosc_validate_update_meta($meta) ? $meta : null;
@@ -194,7 +194,7 @@ add_filter('site_transient_update_plugins', function ($transient) {
     // バージョン比較
     if (version_compare($current_ver, $new_ver, '<')) {
         $update = (object) [
-            'id'          => 'w.org/plugins/' . SOSC_UPDATE_SLUG,
+            'id'          => 'https://github.com/KeigoNagakura/shonan-online-short-code',
             'slug'        => SOSC_UPDATE_SLUG,              // プラグインスラッグ
             'plugin'      => $plugin_file,                  // pluginsディレクトリから見たファイルパス
             'new_version' => $new_ver,                      // 更新後最新バージョン
@@ -210,7 +210,7 @@ add_filter('site_transient_update_plugins', function ($transient) {
     } else {
         // 更新不要なら「なし」にしておく（任意）
         $item = (object) [
-            'id'          => 'w.org/plugins/' . SOSC_UPDATE_SLUG,
+            'id'          => 'https://github.com/KeigoNagakura/shonan-online-short-code',
             'slug'        => SOSC_UPDATE_SLUG,
             'plugin'      => $plugin_file,
             'new_version' => $current_ver,            // 更新なしなので現在のバージョン

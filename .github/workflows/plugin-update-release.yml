@@ -22,9 +22,17 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Check PHP syntax
-        run: find src/so-short-code -name '*.php' -not -path '*/vendor/*' -print0 | xargs -0 -n1 php -l
+        run: |
+          for version in 8.2 8.3; do
+            docker run --rm -v "$PWD:/app:ro" -w /app "php:${version}-cli" sh -ec \
+              "find src/so-short-code tests -name '*.php' -not -path '*/vendor/*' -print0 | xargs -0 -n1 php -l >/tmp/sosc-lint.txt && tail -n 1 /tmp/sosc-lint.txt"
+          done
       - name: Install locked dependencies
         run: composer install --working-dir=src/so-short-code --no-dev --prefer-dist --no-interaction --no-progress --classmap-authoritative
+      - name: Check update contract and JavaScript syntax
+        run: |
+          php tests/github-release-update.php
+          find src/so-short-code tests -name '*.js' -o -name '*.cjs' | while read -r script; do node --check "$script"; done
       - name: Determine version
         id: version
         run: |

@@ -69,7 +69,7 @@ async function main() {
     const cardLayout = await evaluate(`(()=>{const cards=[...document.querySelectorAll('.sosc-manual-card')];return cards.every(card=>{const r=card.getBoundingClientRect();const title=card.querySelector('strong')?.getBoundingClientRect();const more=card.querySelector('.sosc-manual-card-more')?.getBoundingClientRect();return r.width>180&&r.left>=-1&&r.right<=innerWidth+1&&title&&more&&title.bottom<more.top})})()`);
     if (!cardLayout) throw new Error(`Index card layout ${width}: overlap or clipping`);
     await capture(`manual-index-${width}`, width);
-    for (const topic of ['info-list03', 'pickup', 'vertical-banner', 'h2-style']) {
+    for (const topic of ['info-list03', 'pickup', 'vertical-banner', 'h2-style', 'updates', 'backup']) {
       await navigate(`https://localhost/wp-admin/admin.php?page=sosc_manual&topic=${topic}`);
       const detail = await evaluate(`(()=>({title:document.querySelector('.sosc-manual h1')?.textContent.trim(),steps:document.querySelectorAll('.sosc-manual-steps li').length,visual:!!document.querySelector('.sosc-manual-visual img,.sosc-manual-visual svg,.sosc-manual-preview-banner,.sosc-manual-preview-heading'),broken:[...document.querySelectorAll('.sosc-manual-visual img')].filter(x=>!x.complete||!x.naturalWidth).length,scroll:document.documentElement.scrollWidth}))()`);
       if (!detail.title || detail.steps !== 3 || !detail.visual || detail.broken || detail.scroll > width) throw new Error(`Detail ${topic} ${width}: ${JSON.stringify(detail)}`);
@@ -78,8 +78,8 @@ async function main() {
     console.log(`index and samples ${width}px: passed`);
     for (const topic of allTopics) {
       await navigate(`https://localhost/wp-admin/admin.php?page=sosc_manual&topic=${topic}`);
-      const detail = await evaluate(`(()=>({heading:!!document.querySelector('.sosc-manual h1'),sections:document.querySelectorAll('.sosc-manual-body > section').length,visual:!!document.querySelector('.sosc-manual-visual img,.sosc-manual-visual svg,.sosc-manual-preview-banner,.sosc-manual-preview-heading'),broken:[...document.querySelectorAll('.sosc-manual-visual img')].filter(x=>!x.complete||!x.naturalWidth).length,scroll:document.documentElement.scrollWidth}))()`);
-      if (!detail.heading || detail.sections < 3 || !detail.visual || detail.broken || detail.scroll > width) throw new Error(`Topic ${topic} ${width}: ${JSON.stringify(detail)}`);
+      const detail = await evaluate(`(()=>({heading:!!document.querySelector('.sosc-manual h1'),sections:document.querySelectorAll('.sosc-manual-body > section').length,visual:!!document.querySelector('.sosc-manual-visual img,.sosc-manual-visual svg,.sosc-manual-preview-banner,.sosc-manual-preview-heading'),broken:[...document.querySelectorAll('.sosc-manual-visual img')].filter(x=>!x.complete||!x.naturalWidth).length,runtime:!!document.querySelector('.sosc-manual-runtime dl'),scroll:document.documentElement.scrollWidth}))()`);
+      if (!detail.heading || detail.sections < 3 || !detail.visual || detail.broken || detail.scroll > width || (['updates','backup'].includes(topic) && !detail.runtime)) throw new Error(`Topic ${topic} ${width}: ${JSON.stringify(detail)}`);
     }
     console.log(`all ${allTopics.length} chapters ${width}px: passed`);
   }
@@ -105,6 +105,13 @@ async function main() {
     fs.writeFileSync(path.join(output, `settings-${name}.png`), Buffer.from(shot.data, 'base64'));
   }
   console.log(`settings screenshots ${settings.length}: captured`);
+  for (const width of [320, 390, 1280]) {
+    await send('Emulation.setDeviceMetricsOverride', { width, height: 1200, deviceScaleFactor: 1, mobile: width <= 390 });
+    await navigate('https://localhost/wp-admin/admin.php?page=sosc_menu&tab=backup');
+    const backup = await evaluate(`(()=>{const panel=document.querySelector('#tab-pane6');return {visible:!!panel?.classList.contains('active'),noRestore:!!panel?.textContent.includes('このプラグインに復元機能はありません'),scroll:document.documentElement.scrollWidth}})()`);
+    if (backup.visible && (!backup.noRestore || backup.scroll > width)) throw new Error(`Backup guidance layout ${width}: ${JSON.stringify(backup)}`);
+    console.log(`backup guidance ${width}px: ${backup.visible ? 'passed' : 'tab disabled'}`);
+  }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; }).finally(async () => {
   if (ws) ws.close();

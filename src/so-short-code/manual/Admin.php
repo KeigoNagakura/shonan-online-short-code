@@ -70,7 +70,7 @@ final class Admin {
 		<header class="sosc-manual-hero">
 			<h1>湘南オンラインプラグイン 使い方マニュアル</h1>
 			<p>このプラグインで何ができるか、準備から使い方まで機能別に案内します。見たい機能を選んでください。</p>
-			<p class="sosc-manual-meta">作成日: 2026年11月10日 ／ 第1版 ／ 対象: プラグイン 3.8.5 の現行機能</p>
+			<p class="sosc-manual-meta">作成日: 2026年11月10日 ／ 第2版 ／ 最終更新日: 2026年11月11日 ／ 対象: プラグイン 3.8.5 の現行機能</p>
 		</header>
 		<nav class="sosc-manual-jump" aria-label="機能分類">
 			<?php foreach ( array_keys( $groups ) as $group_index => $group ) : ?>
@@ -141,13 +141,43 @@ final class Admin {
 				<section><h2>記述例</h2><p>次の例をコピーし、スラッグや件数を自分のサイトに合わせて変更してください。</p><pre><code><?php echo esc_html( $item['code'] ); ?></code></pre><p class="sosc-manual-copy-row"><button type="button" class="button sosc-manual-copy" data-code="<?php echo esc_attr( $item['code'] ); ?>">ショートコードをコピー</button></p></section>
 			<?php endif; ?>
 			<section class="sosc-manual-note"><h2>確認・注意点</h2><p><?php echo esc_html( $item['note'] ); ?></p></section>
+			<?php if ( 'updates' === $slug || 'backup' === $slug ) : ?>
+				<?php self::runtime_status( $slug ); ?>
+			<?php endif; ?>
 		</main>
-		<p class="sosc-manual-meta">作成日: 2026年11月10日 ／ 第1版</p>
+		<p class="sosc-manual-meta">作成日: 2026年11月10日 ／ 第2版 ／ 最終更新日: 2026年11月11日</p>
 		<nav class="sosc-manual-next" aria-label="マニュアル内の移動">
 			<?php if ( $pos > 0 ) : ?><a href="<?php echo esc_url( self::url( $keys[ $pos - 1 ] ) ); ?>">← <?php echo esc_html( $chapters[ $keys[ $pos - 1 ] ]['title'] ); ?></a><?php endif; ?>
 			<a href="<?php echo esc_url( self::url() ); ?>">目次へ戻る</a>
 			<?php if ( $pos < count( $keys ) - 1 ) : ?><a href="<?php echo esc_url( self::url( $keys[ $pos + 1 ] ) ); ?>"><?php echo esc_html( $chapters[ $keys[ $pos + 1 ] ]['title'] ); ?> →</a><?php endif; ?>
 		</nav>
+		<?php
+	}
+
+	private static function runtime_status( $slug ) {
+		$cron_disabled = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
+		$next = wp_next_scheduled( 'backup' === $slug ? 'sosc_monthly_backup' : 'sosc_packing_daily' );
+		$next_text = $next ? wp_date( 'Y-m-d H:i', $next ) : '予約なし';
+		if ( $next && $next < time() ) {
+			$next_text .= '（予定時刻を過ぎています）';
+		}
+		?>
+		<section class="sosc-manual-runtime" aria-labelledby="sosc-manual-runtime-title">
+			<h2 id="sosc-manual-runtime-title">このサイトの動作状態</h2>
+			<p>表示時点のWordPress設定と予約を読み取っています。外部Cronの実行状況と更新の成功は、この表示だけでは確認できません。</p>
+			<dl>
+				<div><dt>WP-Cron</dt><dd><?php echo esc_html( $cron_disabled ? '内部実行は停止中。外部Cronの設定・実行をサーバー管理者へ確認してください。' : '内部実行は有効。アクセス状況により遅れる場合があります。' ); ?></dd></div>
+				<?php if ( 'updates' === $slug ) : ?>
+					<?php
+					$global_disabled = defined( 'AUTOMATIC_UPDATER_DISABLED' ) && AUTOMATIC_UPDATER_DISABLED;
+					$plugin_allowed = (bool) apply_filters( 'auto_update_plugin', false, (object) array( 'plugin' => SOSC_PLUGIN_BASENAME ) );
+					?>
+					<div><dt>自動更新</dt><dd><?php echo esc_html( $global_disabled ? 'WordPress全体で停止中' : ( $plugin_allowed ? 'このプラグインは対象。定期処理と更新権限が必要です。' : 'このプラグインは対象外' ) ); ?></dd></div>
+				<?php else : ?>
+					<div><dt>次回バックアップ</dt><dd><?php echo esc_html( $next_text ); ?></dd></div>
+				<?php endif; ?>
+			</dl>
+		</section>
 		<?php
 	}
 
