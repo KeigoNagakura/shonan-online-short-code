@@ -485,7 +485,7 @@ final class Admin {
 			$result             = $wpdb->insert( Database::table( 'boxes' ), $data );
 		}
 		if ( false === $result ) {
-			return new \WP_Error( 'box_save', $wpdb->last_error ? $wpdb->last_error : '外箱を保存できませんでした。' );
+			return new \WP_Error( 'box_save', '外箱を保存できませんでした。' );
 		}
 		Settings::bump_revision();
 		return true;
@@ -722,12 +722,11 @@ final class Admin {
 				self::import_error( '同じPost IDとSKU meta_idが複数行あります。' );
 			}
 			$seen[ $key ] = true;
-			$sku          = $wpdb->get_row( $wpdb->prepare( "SELECT meta_id,post_id,code,name,weight FROM {$wpdb->prefix}usces_skus WHERE post_id=%d AND meta_id=%d", $post_id, $meta_id ), ARRAY_A );
 			$width        = self::csv_integer( $row['width'], 1, 10000 );
 			$length       = self::csv_integer( $row['length'], 1, 10000 );
 			$depth        = self::csv_integer( $row['depth'], 1, 10000 );
 			$margin       = self::csv_integer( '' === $row['margin'] ? '0' : $row['margin'], 0, 1000 );
-			if ( ! $sku || false === $width || false === $length || false === $depth || false === $margin || ! in_array( (string) $row['margin_required'], array( '0', '1' ), true ) || ( '1' === (string) $row['margin_required'] && ( $margin < 1 || $width + 2 * $margin > 10000 || $length + 2 * $margin > 10000 || $depth + 2 * $margin > 10000 ) ) ) {
+			if ( false === $width || false === $length || false === $depth || false === $margin || ! in_array( (string) $row['margin_required'], array( '0', '1' ), true ) || ( '1' === (string) $row['margin_required'] && ( $margin < 1 || $width + 2 * $margin > 10000 || $length + 2 * $margin > 10000 || $depth + 2 * $margin > 10000 ) ) ) {
 				fclose( $handle );
 				self::import_error( 'CSVに存在しないSKUまたは範囲外の値があります。' );
 			}
@@ -739,10 +738,21 @@ final class Admin {
 				'depth'           => $depth,
 				'margin_required' => (int) $row['margin_required'],
 				'margin'          => $margin,
-				'sku_signature'   => self::sku_signature( $sku ),
 			);
 		}
 		fclose( $handle );
+		$skus = self::load_import_skus( $rows );
+		if ( is_wp_error( $skus ) ) {
+			self::import_error( 'SKUデータを取得できませんでした。' );
+		}
+		foreach ( $rows as &$row ) {
+			$key = $row['post_id'] . ':' . $row['sku_meta_id'];
+			if ( ! isset( $skus[ $key ] ) ) {
+				self::import_error( 'CSVに存在しないSKUがあります。' );
+			}
+			$row['sku_signature'] = self::sku_signature( $skus[ $key ] );
+		}
+		unset( $row );
 		$token = wp_generate_password( 20, false, false );
 		set_transient(
 			'sosc_packing_import_' . get_current_user_id() . '_' . $token,
@@ -786,8 +796,13 @@ final class Admin {
 			self::import_error( 'データベースのトランザクションを開始できませんでした。' );
 		}
 		$now = Database::now();
+		$skus = self::load_import_skus( $job['rows'], true );
+		if ( is_wp_error( $skus ) ) {
+			$wpdb->query( 'ROLLBACK' );
+			self::import_error( 'SKUデータを取得できませんでした。保存していません。' );
+		}
 		foreach ( $job['rows'] as $row ) {
-			$sku = $wpdb->get_row( $wpdb->prepare( "SELECT meta_id,post_id,code,name,weight FROM {$wpdb->prefix}usces_skus WHERE post_id=%d AND meta_id=%d", $row['post_id'], $row['sku_meta_id'] ), ARRAY_A );
+			$sku = isset( $skus[ $row['post_id'] . ':' . $row['sku_meta_id'] ] ) ? $skus[ $row['post_id'] . ':' . $row['sku_meta_id'] ] : null;
 			if ( ! $sku || empty( $row['sku_signature'] ) || ! hash_equals( (string) $row['sku_signature'], self::sku_signature( $sku ) ) ) {
 				$wpdb->query( 'ROLLBACK' );
 				self::import_error( 'CSVの事前チェック後にSKUが変更されました。保存していません。もう一度事前チェックしてください。' );
@@ -832,6 +847,36 @@ final class Admin {
 			)
 		);
 		exit;
+	}
+
+	/**
+	 * Fetch SKU identities in bounded batches. Commit uses row locks until the transaction ends.
+	 *
+	 * @param array $rows Imported rows.
+	 * @param bool  $lock Lock matching SKU rows for commit.
+	 * @return array|\WP_Error
+	 */
+	private static function load_import_skus( $rows, $lock = false ) {
+		global $wpdb;
+		$ids = array_values( array_unique( array_map( static function ( $row ) {
+			return (int) $row['sku_meta_id'];
+		}, $rows ) ) );
+		$found = array();
+		foreach ( array_chunk( $ids, 250 ) as $chunk ) {
+			$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%d' ) );
+			$sql = "SELECT meta_id,post_id,code,name,weight FROM {$wpdb->prefix}usces_skus WHERE meta_id IN ({$placeholders})";
+			if ( $lock ) {
+				$sql .= ' FOR UPDATE';
+			}
+			$records = $wpdb->get_results( $wpdb->prepare( $sql, $chunk ), ARRAY_A );
+			if ( ! is_array( $records ) || '' !== $wpdb->last_error ) {
+				return new \WP_Error( 'sosc_sku_lookup_failed', 'SKUデータを取得できませんでした。' );
+			}
+			foreach ( $records as $record ) {
+				$found[ (int) $record['post_id'] . ':' . (int) $record['meta_id'] ] = $record;
+			}
+		}
+		return $found;
 	}
 
 	private static function csv_integer( $value, $min, $max ) {

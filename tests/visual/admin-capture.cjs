@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const project = path.resolve(__dirname, '../..');
 const mode = process.argv[2];
 if (!['baseline','compare'].includes(mode)) throw new Error('Usage: node --experimental-websocket tests/visual/admin-capture.cjs baseline|compare');
-const baselineDate = process.env.SOSC_BASELINE_DATE || '20261020-v3';
+const baselineDate = process.env.SOSC_BASELINE_DATE || '20261111-v1';
 if (!/^\d{8}(?:-v[1-9]\d*)?$/.test(baselineDate)) throw new Error('SOSC_BASELINE_DATE must be YYYYMMDD or YYYYMMDD-vN.');
 const password = process.env.SOSC_ADMIN_PASSWORD;
 const username = process.env.SOSC_ADMIN_USER || 'wp_local_admin';
@@ -53,6 +53,8 @@ async function main() {
     await send('Emulation.setDeviceMetricsOverride',{width,height:1200,deviceScaleFactor:1,mobile:width<=390});
     for(const tab of pages){
       await send('Page.navigate',{url:`https://localhost/wp-admin/admin.php?page=sosc_menu&tab=${tab}`}); await ready();
+      // WordPress core update notices are outside the plugin and change independently.
+      await evaluate(`(()=>{document.querySelectorAll('#wpbody-content > .update-nag').forEach(x=>x.style.display='none');return true})()`);
       const layout=await evaluate(`(()=>{const root=document.querySelector('.wrap.sosc-bs-scope'),panel=document.querySelector('.sosc-tab-pane.active');return {url:location.pathname,width:innerWidth,scroll:document.documentElement.scrollWidth,height:Math.ceil(Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)),root:!!root,tab:panel?.id||null,content:!!panel?.textContent.trim(),scopedCss:[...document.styleSheets].some(s=>s.href&&new URL(s.href).pathname.endsWith('/bootstrap.scoped.min.css')),overflow:root?[...root.querySelectorAll('*')].filter(x=>{const r=x.getBoundingClientRect();return r.right>innerWidth+2}).slice(0,5).map(x=>({tag:x.tagName,cls:x.className})):[]}})()`);
       if(!layout.root||layout.tab!==panelIds[tab]||!layout.content||!layout.scopedCss||layout.url!=='/wp-admin/admin.php'||layout.width!==width||layout.scroll>width||layout.height>10000)throw new Error(`Admin authentication/layout failed: ${tab} ${width}: ${JSON.stringify(layout)}`);
       const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:true,clip:{x:0,y:0,width,height:Math.min(layout.height,10000),scale:1}});

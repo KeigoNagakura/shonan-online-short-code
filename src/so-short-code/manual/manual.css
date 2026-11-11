@@ -46,6 +46,10 @@
 .sosc-manual-body pre { overflow-x: auto; margin: 0; padding: 15px; border-radius: 4px; background: #172a36; color: #fff; font-size: 14px; }
 .sosc-manual-copy-row { margin-top: 10px !important; }
 .sosc-manual-note { border-left: 4px solid #c48b31 !important; }
+.sosc-manual-runtime dl { margin: 12px 0 0; border-top: 1px solid #d5dfe5; }
+.sosc-manual-runtime dl > div { display: grid; grid-template-columns: minmax(110px, 22%) 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid #d5dfe5; }
+.sosc-manual-runtime dt { color: #173c50; font-weight: 700; }
+.sosc-manual-runtime dd { margin: 0; overflow-wrap: anywhere; }
 .sosc-manual-next { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin: 26px 0 50px; }
 .sosc-manual-next a { display: inline-flex; align-items: center; min-height: 40px; padding: 8px 12px; background: #fff; border: 1px solid #aac3d0; border-radius: 4px; }
 @media (max-width: 600px) {
@@ -53,4 +57,5 @@
     .sosc-manual-grid { grid-template-columns: 1fr; }
     .sosc-manual-flow { display: none; }
     .sosc-manual-flow-mobile { display: block; width: 100%; max-width: 300px; height: auto; margin: auto; }
+    .sosc-manual-runtime dl > div { grid-template-columns: 1fr; gap: 2px; }
 }

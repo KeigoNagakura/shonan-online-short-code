@@ -74,6 +74,7 @@ final class Admin {
 		?>
 		<div class="mt-4">
 			<h3><?php esc_html_e( '月次バックアップ', 'so-short-code' ); ?></h3>
+			<p><?php esc_html_e( 'このプラグインに復元機能はありません。復旧が必要な場合は、サーバー管理者がZIP同梱の手順を使い、プラグイン外で手動で行います。', 'so-short-code' ); ?></p>
 			<p><strong><?php esc_html_e( '保存先:', 'so-short-code' ); ?></strong> <code><?php echo esc_html( Manager::storage_directory() ); ?></code></p>
 			<p><?php esc_html_e( 'パスワードを登録するとAES-256暗号化を必須にします。暗号化を利用できない場合は平文ZIPを作らず中止します。パスワードがない場合は暗号化なしの通常ZIPを作成します。', 'so-short-code' ); ?></p>
 			<p><strong><?php echo esc_html( '直近のバックアップ: ' . $encryption ); ?></strong></p>

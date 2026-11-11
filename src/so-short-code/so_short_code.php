@@ -5,8 +5,9 @@
  * Description: 湘南オンラインショートコード
  * Author: shonan-online Nagakura
  * Version: 3.8.5
+ * Update URI: https://github.com/KeigoNagakura/shonan-online-short-code
  * Requires at least: 6.0
- * Requires PHP: 7.4
+ * Requires PHP: 8.2
  * Author URI: https://shonan-online.co.jp
  * License: GPL2
  */
@@ -28,18 +29,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-/**
- * リリース方法2026/2/25
- * 1.本ファイルのVersion: を修正
- * 2.settings.phpの更新設定を修正
- * 2.1.更新日時
- * 2.2.更新ログ
- * 2.3.現在のプラグインバージョン
- * 3.out_source/so-short-code.jsonの修正
- * 3.1.version
- * 3.2.download_url
- * 3.3.last_updated
- */
+// リリースはmainへのマージ後にGitHub Actionsが版付きZIPを生成する。
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

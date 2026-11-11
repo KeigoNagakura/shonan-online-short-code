@@ -1,12 +1,12 @@
 {
-  "broken-link-checker": "2.4.14.1",
+  "broken-link-checker": "2.4.15",
   "classic-editor": "1.7.0",
-  "contact-form-7": "6.1.7",
-  "custom-css-js": "3.54",
-  "google-site-kit": "1.186.0",
-  "google-sitemap-generator": "4.1.24",
+  "contact-form-7": "6.2.2",
+  "custom-css-js": "3.54.3",
+  "google-site-kit": "1.189.0",
+  "google-sitemap-generator": "4.1.25",
   "imagemagick-engine": "2.0.0",
-  "protect-uploads": "0.7.1",
-  "usc-e-shop": "2.12.2",
+  "protect-uploads": "0.8.0",
+  "usc-e-shop": "2.12.5",
   "wp-multibyte-patch": "2.9.3"
 }
