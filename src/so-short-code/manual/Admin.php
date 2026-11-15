@@ -70,7 +70,7 @@ final class Admin {
 		<header class="sosc-manual-hero">
 			<h1>湘南オンラインプラグイン 使い方マニュアル</h1>
 			<p>このプラグインで何ができるか、準備から使い方まで機能別に案内します。見たい機能を選んでください。</p>
-			<p class="sosc-manual-meta">作成日: 2026年11月10日 ／ 第2版 ／ 最終更新日: 2026年11月11日 ／ 対象: プラグイン 3.8.5 の現行機能</p>
+			<p class="sosc-manual-meta">作成日: 2026年11月10日 ／ 第2版 ／ 最終更新日: 2026年11月11日 ／ 対象: プラグイン <?php echo esc_html( SOSC_VERSION ); ?> の現行機能</p>
 		</header>
 		<nav class="sosc-manual-jump" aria-label="機能分類">
 			<?php foreach ( array_keys( $groups ) as $group_index => $group ) : ?>

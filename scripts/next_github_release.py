@@ -6,6 +6,18 @@ import re
 import subprocess
 from pathlib import Path
 
+from build_update_package import is_distributable_path
+
+
+SOURCE_PREFIX = "src/so-short-code/"
+
+
+def distributable_tree(entries: list[dict]) -> dict[str, str]:
+    """Map tracked files that actually enter the release ZIP to their Git object IDs."""
+    return {item["path"]: item["sha"] for item in entries
+            if item["type"] == "blob" and item["path"].startswith(SOURCE_PREFIX)
+            and is_distributable_path(Path(item["path"][len(SOURCE_PREFIX):]))}
+
 
 def next_version(base: str, latest: dict | None, sha: str, current_source_tree: str | None = None, previous_source_tree: str | None = None) -> tuple[str | None, str | None]:
     current = tuple(map(int, base.split(".")))
@@ -44,9 +56,16 @@ def main() -> None:
         raise RuntimeError(response.stderr)
     current_source_tree = previous_source_tree = None
     if latest and latest.get("target_commitish") != os.environ["GITHUB_SHA"]:
-        current_source_tree = subprocess.run(
-            ["git", "rev-parse", "HEAD:src/so-short-code"], capture_output=True, text=True, encoding="utf-8", check=True,
-        ).stdout.strip()
+        current_entries = subprocess.run(
+            ["git", "ls-tree", "-r", "-z", "HEAD", "--", "src/so-short-code"],
+            capture_output=True, check=True,
+        ).stdout
+        current_source_tree = distributable_tree([
+            {"type": header.decode("ascii").split()[1], "sha": header.decode("ascii").split()[2],
+             "path": path.decode("utf-8")}
+            for record in current_entries.split(b"\0") if record
+            for header, path in [record.split(b"\t", 1)]
+        ])
         previous_commit = subprocess.run(
             ["gh", "api", f"repos/{os.environ['GITHUB_REPOSITORY']}/git/commits/{latest['target_commitish']}"],
             capture_output=True, text=True, encoding="utf-8", check=True,
@@ -59,11 +78,9 @@ def main() -> None:
         tree_response = json.loads(previous_tree.stdout)
         if tree_response.get("truncated"):
             raise ValueError("Previous release tree response is truncated")
-        matches = [item["sha"] for item in tree_response["tree"]
-                   if item["path"] == "src/so-short-code" and item["type"] == "tree"]
-        if len(matches) != 1:
-            raise ValueError("Previous release has no unique plugin source tree")
-        previous_source_tree = matches[0]
+        previous_source_tree = distributable_tree(tree_response["tree"])
+        if not current_source_tree or not previous_source_tree:
+            raise ValueError("Current or previous release has no distributable plugin source")
     version, tag = next_version(match.group(1), latest, os.environ["GITHUB_SHA"], current_source_tree, previous_source_tree)
     with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
         if version is None:

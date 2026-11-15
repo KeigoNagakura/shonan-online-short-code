@@ -22,6 +22,17 @@ SKIP_DIRS = {".git", "__pycache__", "node_modules", "tests", ".local"}
 SECRET_SUFFIXES = {".key", ".pem", ".p12", ".pfx", ".env"}
 
 
+def is_distributable_path(relative: Path) -> bool:
+    """Whether a source path contributes to the release ZIP."""
+    if any(part in SKIP_DIRS for part in relative.parts):
+        return False
+    if relative.as_posix() == "update/so-short-code.json":
+        return False
+    if any(part.lower().endswith("_old") or re.search(r"(?i)_old_?\d{8}$|_\d{8}_old$", part) for part in relative.parts):
+        return False
+    return True
+
+
 def fail(message: str) -> None:
     raise ValueError(message)
 
@@ -52,13 +63,11 @@ def source_files() -> list[Path]:
     result = []
     for path in SOURCE.rglob("*"):
         relative = path.relative_to(SOURCE)
-        if any(part in SKIP_DIRS for part in relative.parts):
+        if not is_distributable_path(relative):
             continue
         if path.is_symlink():
             fail(f"Symlink is not allowed in release: {relative}")
-        if not path.is_file() or relative.as_posix() == "update/so-short-code.json":
-            continue
-        if any(part.lower().endswith("_old") or re.search(r"(?i)_old_?\d{8}$|_\d{8}_old$", part) for part in relative.parts):
+        if not path.is_file():
             continue
         if path.suffix.lower() in SECRET_SUFFIXES or path.name.lower().startswith(".env"):
             fail(f"Potential secret file in release source: {relative}")

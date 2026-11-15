@@ -41,7 +41,7 @@ final class Maintenance {
 							'expires_at' => null,
 							'updated_at' => $now,
 						),
-						array( 'id' => $row->id )
+						array( 'id' => $row->id, 'status' => 'temporary', 'order_id' => null, 'expires_at' => $row->expires_at )
 					);
 					if ( false === $result ) {
 						delete_option( $lock );
@@ -57,11 +57,14 @@ final class Maintenance {
 							'status'     => 'external_review',
 							'updated_at' => $now,
 						),
-						array( 'id' => $row->id )
+						array( 'id' => $row->id, 'status' => 'temporary', 'expires_at' => $row->expires_at )
 					);
 					if ( false === $result ) {
 						delete_option( $lock );
 						return new \WP_Error( 'maintenance_review_update_failed', '破損データの隔離に失敗しました。' );
+					}
+					if ( 0 === $result ) {
+						continue;
 					}
 					Database::log(
 						'snapshot_corrupted',
@@ -85,7 +88,7 @@ final class Maintenance {
 								'status'     => 'external_review',
 								'updated_at' => $now,
 							),
-							array( 'id' => $row->id )
+							array( 'id' => $row->id, 'status' => 'temporary', 'expires_at' => $row->expires_at )
 						);
 						if ( false === $result ) {
 							delete_option( $lock );
@@ -95,9 +98,7 @@ final class Maintenance {
 						$result = $wpdb->update(
 							Database::table( 'orders' ),
 							array( 'expires_at' => gmdate( 'Y-m-d H:i:s', $review_at ) ),
-							array( 'id' => $row->id ),
-							array( '%s' ),
-							array( '%d' )
+							array( 'id' => $row->id, 'status' => 'temporary', 'expires_at' => $row->expires_at )
 						);
 						if ( false === $result ) {
 							return new \WP_Error( 'maintenance_external_reschedule_failed', '外部決済データの再確認日時を更新できませんでした。' );
@@ -105,7 +106,7 @@ final class Maintenance {
 					}
 					continue;
 				}
-				if ( false === $wpdb->delete( Database::table( 'orders' ), array( 'id' => $row->id ) ) ) {
+				if ( false === $wpdb->delete( Database::table( 'orders' ), array( 'id' => $row->id, 'status' => 'temporary', 'expires_at' => $row->expires_at ) ) ) {
 					delete_option( $lock );
 					return new \WP_Error( 'maintenance_order_delete_failed', '期限切れ仮注文の削除に失敗しました。' );
 				}
