@@ -122,14 +122,24 @@ final class Admin {
 		// Values are validated field-by-field below.
 		$rows = isset( $_POST['sosc_packing_skus'] ) && is_array( $_POST['sosc_packing_skus'] ) ? wp_unslash( $_POST['sosc_packing_skus'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		foreach ( $rows as $meta_id => $row ) {
-			$meta_id = absint( $meta_id );
+			$meta_id = self::csv_identifier( (string) $meta_id );
+			if ( false === $meta_id || ! is_array( $row ) ) {
+				$wpdb->query( 'ROLLBACK' );
+				self::set_product_save_error( 'SKUの入力形式が不正です。' );
+				return;
+			}
 			$valid   = $wpdb->get_var( $wpdb->prepare( "SELECT meta_id FROM {$wpdb->prefix}usces_skus WHERE meta_id = %d AND post_id = %d", $meta_id, $post_id ) );
 			if ( ! $valid ) {
 				continue;
 			}
-			$width  = isset( $row['width'] ) ? absint( $row['width'] ) : 0;
-			$length = isset( $row['length'] ) ? absint( $row['length'] ) : 0;
-			$depth  = isset( $row['depth'] ) ? absint( $row['depth'] ) : 0;
+			$width  = isset( $row['width'] ) && '' !== $row['width'] ? self::csv_integer( $row['width'], 0, 10000 ) : 0;
+			$length = isset( $row['length'] ) && '' !== $row['length'] ? self::csv_integer( $row['length'], 0, 10000 ) : 0;
+			$depth  = isset( $row['depth'] ) && '' !== $row['depth'] ? self::csv_integer( $row['depth'], 0, 10000 ) : 0;
+			if ( false === $width || false === $length || false === $depth ) {
+				$wpdb->query( 'ROLLBACK' );
+				self::set_product_save_error( 'SKU寸法は0～10000mmの整数で入力してください。設定は保存していません。' );
+				return;
+			}
 			if ( 0 === $width && 0 === $length && 0 === $depth ) {
 				$result = $wpdb->delete(
 					Database::table( 'skus' ),
@@ -152,7 +162,12 @@ final class Admin {
 				return;
 			}
 			$margin_required = empty( $row['margin_required'] ) ? 0 : 1;
-			$margin          = isset( $row['margin'] ) ? absint( $row['margin'] ) : 0;
+			$margin          = isset( $row['margin'] ) && '' !== $row['margin'] ? self::csv_integer( $row['margin'], 0, 1000 ) : 0;
+			if ( false === $margin ) {
+				$wpdb->query( 'ROLLBACK' );
+				self::set_product_save_error( '梱包マージンは0～1000mmの整数で入力してください。設定は保存していません。' );
+				return;
+			}
 			if ( $margin_required && ( $margin < 1 || $margin > 1000 || $width + 2 * $margin > 10000 || $length + 2 * $margin > 10000 || $depth + 2 * $margin > 10000 ) ) {
 				$wpdb->query( 'ROLLBACK' );
 				self::set_product_save_error( '梱包マージンは1～1000mmで、加算後の各辺が10000mm以下になるよう入力してください。設定は保存していません。' );
@@ -247,7 +262,7 @@ final class Admin {
 		}
 		if ( 'save_box' === $action ) {
 			global $wpdb;
-			$box_id = isset( $_POST['box_id'] ) ? absint( $_POST['box_id'] ) : 0;
+			$box_id = isset( $_POST['box_id'] ) && is_scalar( $_POST['box_id'] ) && '' !== (string) $_POST['box_id'] ? self::csv_identifier( (string) $_POST['box_id'] ) : 0;
 			$before = $box_id ? $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . Database::table( 'boxes' ) . ' WHERE id=%d', $box_id ), ARRAY_A ) : null;
 			$result = self::save_box();
 			if ( ! is_wp_error( $result ) ) {
@@ -272,7 +287,10 @@ final class Admin {
 		}
 		if ( 'delete_box' === $action ) {
 			global $wpdb;
-			$box_id = isset( $_POST['box_id'] ) ? absint( $_POST['box_id'] ) : 0;
+			$box_id = isset( $_POST['box_id'] ) && is_scalar( $_POST['box_id'] ) ? self::csv_identifier( (string) $_POST['box_id'] ) : false;
+			if ( false === $box_id ) {
+				self::redirect_notice( '削除対象の外箱IDが不正です。', true );
+			}
 			$before = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . Database::table( 'boxes' ) . ' WHERE id=%d', $box_id ), ARRAY_A );
 			$result = $wpdb->delete( Database::table( 'boxes' ), array( 'id' => $box_id ), array( '%d' ) );
 			if ( 1 !== $result ) {
@@ -295,12 +313,13 @@ final class Admin {
 			self::redirect_notice( '外箱を削除しました。', false );
 		}
 		if ( 'duplicate_box' === $action ) {
-			$result = self::duplicate_box( isset( $_POST['box_id'] ) ? absint( $_POST['box_id'] ) : 0 );
+			$box_id = isset( $_POST['box_id'] ) && is_scalar( $_POST['box_id'] ) ? self::csv_identifier( (string) $_POST['box_id'] ) : false;
+			$result = false === $box_id ? new \WP_Error( 'invalid_box_id', '複製対象の外箱IDが不正です。' ) : self::duplicate_box( $box_id );
 			if ( ! is_wp_error( $result ) ) {
 				Database::log(
 					'box_duplicated',
 					array(
-						'source_id' => absint( $_POST['box_id'] ),
+						'source_id' => $box_id,
 						'new_id'    => (int) $result,
 						'reason'    => '外箱を複製',
 						'user_id'   => get_current_user_id(),
@@ -327,7 +346,7 @@ final class Admin {
 	private static function resolve_settings_duplicate() {
 		global $wpdb;
 		$name    = isset( $_POST['param_name'] ) ? sanitize_key( wp_unslash( $_POST['param_name'] ) ) : '';
-		$id      = isset( $_POST['keep_id'] ) ? absint( $_POST['keep_id'] ) : 0;
+		$id      = isset( $_POST['keep_id'] ) && is_scalar( $_POST['keep_id'] ) ? self::csv_identifier( (string) $_POST['keep_id'] ) : false;
 		$blocked = get_option( 'sosc_settings_migration_blocked', array() );
 		$backup  = get_option( 'sosc_settings_migration_backup', '' );
 		if ( ! is_array( $blocked ) || ! in_array( $name, $blocked, true ) || ! $backup || ! $id ) {
@@ -352,8 +371,11 @@ final class Admin {
 
 	private static function update_individual() {
 		global $wpdb;
-		$id       = isset( $_POST['record_id'] ) ? absint( $_POST['record_id'] ) : 0;
-		$revision = isset( $_POST['business_revision'] ) ? absint( $_POST['business_revision'] ) : 0;
+		$id       = isset( $_POST['record_id'] ) && is_scalar( $_POST['record_id'] ) ? self::csv_identifier( (string) $_POST['record_id'] ) : false;
+		$revision = isset( $_POST['business_revision'] ) && is_scalar( $_POST['business_revision'] ) ? self::csv_integer( (string) $_POST['business_revision'], 0, PHP_INT_MAX - 1 ) : false;
+		if ( false === $id || false === $revision ) {
+			return new \WP_Error( 'invalid_individual_target', '更新対象または版番号が不正です。' );
+		}
 		$row      = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . Database::table( 'orders' ) . ' WHERE id=%d', $id ) );
 		if ( ! $row || (int) $row->business_revision !== $revision ) {
 			return new \WP_Error( 'individual_conflict', '別の担当者が先に更新しました。画面を再読み込みして確認してください。' );
@@ -383,7 +405,10 @@ final class Admin {
 		if ( 'done' === $state && ( '' === $outcome || ( 'shipped' === $outcome && ( '' === $method || '' === $diff ) ) ) ) {
 			return new \WP_Error( 'incomplete_individual', '対応済みにするには対応結果、実発送方法、送料差額状況を入力してください。' );
 		}
-		$assignee = isset( $_POST['assignee_user_id'] ) ? absint( $_POST['assignee_user_id'] ) : 0;
+		$assignee = isset( $_POST['assignee_user_id'] ) && is_scalar( $_POST['assignee_user_id'] ) ? self::csv_integer( (string) $_POST['assignee_user_id'], 0, PHP_INT_MAX ) : 0;
+		if ( false === $assignee ) {
+			return new \WP_Error( 'invalid_assignee', '担当者IDが不正です。' );
+		}
 		if ( 'working' === $state && ! $assignee ) {
 			$assignee = get_current_user_id();
 		}
@@ -456,15 +481,28 @@ final class Admin {
 		if ( '' === $name || mb_strlen( $name ) > 100 ) {
 			return new \WP_Error( 'invalid_name', '箱名を1～100文字で入力してください。' );
 		}
+		$fields = array(
+			'inner_width' => 10000, 'inner_length' => 10000, 'inner_depth' => 10000,
+			'delivery_method_id' => PHP_INT_MAX, 'shipping_charge_id' => PHP_INT_MAX, 'priority' => 999,
+		);
+		$values = array();
+		foreach ( $fields as $field => $maximum ) {
+			$values[ $field ] = isset( $_POST[ $field ] ) && is_scalar( $_POST[ $field ] )
+				? ( in_array( $field, array( 'delivery_method_id', 'shipping_charge_id' ), true ) ? self::csv_identifier( (string) $_POST[ $field ] ) : self::csv_integer( $_POST[ $field ], 1, $maximum ) )
+				: false;
+			if ( false === $values[ $field ] ) {
+				return new \WP_Error( 'invalid_box', '外箱の寸法、配送方法、送料、優先順位は正の整数で入力してください。' );
+			}
+		}
 		$data = array(
 			'name'               => $name,
 			'name_key'           => $name,
-			'inner_width'        => isset( $_POST['inner_width'] ) ? absint( $_POST['inner_width'] ) : 0,
-			'inner_length'       => isset( $_POST['inner_length'] ) ? absint( $_POST['inner_length'] ) : 0,
-			'inner_depth'        => isset( $_POST['inner_depth'] ) ? absint( $_POST['inner_depth'] ) : 0,
-			'delivery_method_id' => isset( $_POST['delivery_method_id'] ) ? absint( $_POST['delivery_method_id'] ) : 0,
-			'shipping_charge_id' => isset( $_POST['shipping_charge_id'] ) ? absint( $_POST['shipping_charge_id'] ) : 0,
-			'priority'           => isset( $_POST['priority'] ) ? absint( $_POST['priority'] ) : 0,
+			'inner_width'        => $values['inner_width'],
+			'inner_length'       => $values['inner_length'],
+			'inner_depth'        => $values['inner_depth'],
+			'delivery_method_id' => $values['delivery_method_id'],
+			'shipping_charge_id' => $values['shipping_charge_id'],
+			'priority'           => $values['priority'],
 			'enabled'            => empty( $_POST['enabled'] ) ? 0 : 1,
 			'updated_at'         => Database::now(),
 		);
@@ -474,7 +512,10 @@ final class Admin {
 		if ( $data['inner_width'] < 1 || $data['inner_width'] > 10000 || $data['inner_length'] < 1 || $data['inner_length'] > 10000 || $data['inner_depth'] < 1 || $data['inner_depth'] > 10000 || $data['priority'] < 1 || $data['priority'] > 999 ) {
 			return new \WP_Error( 'invalid_box', '寸法は1～10,000mm、優先順位は1～999で入力してください。' );
 		}
-		$id = empty( $_POST['box_id'] ) ? 0 : absint( $_POST['box_id'] );
+		$id = empty( $_POST['box_id'] ) ? 0 : ( is_scalar( $_POST['box_id'] ) ? self::csv_identifier( (string) $_POST['box_id'] ) : false );
+		if ( false === $id ) {
+			return new \WP_Error( 'invalid_box_id', '更新対象の外箱IDが不正です。' );
+		}
 		if ( $id ) {
 			if ( ! $wpdb->get_var( $wpdb->prepare( 'SELECT id FROM ' . Database::table( 'boxes' ) . ' WHERE id=%d', $id ) ) ) {
 				return new \WP_Error( 'box_not_found', '更新対象の外箱が見つかりません。' );
@@ -714,8 +755,12 @@ final class Admin {
 				self::import_error( 'CSVの行数または列数が上限・指定形式に一致しません。' );
 			}
 			$row     = array_combine( $expected, $values );
-			$post_id = absint( $row['post_id'] );
-			$meta_id = absint( $row['sku_meta_id'] );
+			$post_id = self::csv_identifier( $row['post_id'] );
+			$meta_id = self::csv_identifier( $row['sku_meta_id'] );
+			if ( false === $post_id || false === $meta_id ) {
+				fclose( $handle );
+				self::import_error( 'Post IDまたはSKU meta_idが正の整数ではありません。' );
+			}
 			$key     = $post_id . ':' . $meta_id;
 			if ( isset( $seen[ $key ] ) ) {
 				fclose( $handle );
@@ -880,11 +925,28 @@ final class Admin {
 	}
 
 	private static function csv_integer( $value, $min, $max ) {
-		if ( ! is_scalar( $value ) || ! preg_match( '/^\d+$/', (string) $value ) ) {
+		if ( ! is_scalar( $value ) || ! preg_match( '/^[0-9]+$/D', (string) $value ) ) {
 			return false;
 		}
-		$value = (int) $value;
+		$text = ltrim( (string) $value, '0' );
+		$text = '' === $text ? '0' : $text;
+		$maximum = (string) PHP_INT_MAX;
+		if ( strlen( $text ) > strlen( $maximum ) || ( strlen( $text ) === strlen( $maximum ) && strcmp( $text, $maximum ) > 0 ) ) {
+			return false;
+		}
+		$value = (int) $text;
 		return $value >= $min && $value <= $max ? $value : false;
+	}
+
+	private static function csv_identifier( $value ) {
+		if ( ! is_string( $value ) || ! preg_match( '/^[1-9][0-9]*$/D', $value ) ) {
+			return false;
+		}
+		$maximum = (string) PHP_INT_MAX;
+		if ( strlen( $value ) > strlen( $maximum ) || ( strlen( $value ) === strlen( $maximum ) && strcmp( $value, $maximum ) > 0 ) ) {
+			return false;
+		}
+		return (int) $value;
 	}
 
 	private static function sku_signature( $sku ) {
@@ -991,20 +1053,23 @@ final class Admin {
 				$cart = array();
 				foreach ( preg_split( '/\r\n|\r|\n/', $lines ) as $line ) {
 					$parts = array_map( 'trim', str_getcsv( $line ) );
-					if ( 3 !== count( $parts ) || ! ctype_digit( $parts[0] ) || ! ctype_digit( $parts[2] ) || (int) $parts[2] < 1 ) {
+					if ( 3 !== count( $parts ) || false === self::csv_identifier( $parts[0] ) || false === self::csv_identifier( $parts[2] ) ) {
 						$result = new \WP_Error( 'invalid_reference_items', '商品は1行につき「post_id,SKUコード,数量」で入力してください。' );
 						break;
 					}
 					$cart[] = array(
-						'post_id'  => (int) $parts[0],
+						'post_id'  => self::csv_identifier( $parts[0] ),
 						'sku'      => rawurlencode( $parts[1] ),
-						'quantity' => (int) $parts[2],
+						'quantity' => self::csv_identifier( $parts[2] ),
 					);
 				}
 				if ( ! is_wp_error( $result ) ) {
 					$pref     = isset( $_POST['reference_pref'] ) ? sanitize_text_field( wp_unslash( $_POST['reference_pref'] ) ) : '';
 					$country  = isset( $_POST['reference_country'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_POST['reference_country'] ) ) ) : 'JP';
-					$delivery = isset( $_POST['reference_delivery'] ) ? absint( $_POST['reference_delivery'] ) : 0;
+					$delivery = isset( $_POST['reference_delivery'] ) && is_scalar( $_POST['reference_delivery'] ) ? self::csv_identifier( (string) $_POST['reference_delivery'] ) : false;
+					if ( false === $delivery ) {
+						$result = new \WP_Error( 'invalid_reference_delivery', '配送方法のIDが不正です。' );
+					}
 					$entry    = array(
 						'customer' => array(
 							'country' => $country,
@@ -1016,7 +1081,9 @@ final class Admin {
 						),
 						'order'    => array( 'delivery_method' => $delivery ),
 					);
-					$result   = ( new Calculator() )->calculate( $cart, $entry );
+					if ( ! is_wp_error( $result ) ) {
+						$result = ( new Calculator() )->calculate( $cart, $entry );
+					}
 				}
 			}
 		}

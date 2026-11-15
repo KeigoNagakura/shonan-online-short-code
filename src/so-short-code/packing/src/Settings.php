@@ -151,14 +151,25 @@ final class Settings {
 					$clean[ $name ] = empty( $value ) ? '0' : '1';
 					break;
 				case 'int':
-					if ( ! is_scalar( $value ) || ! preg_match( '/^\d+$/', (string) $value ) || (int) $value < $rule['min'] || (int) $value > $rule['max'] ) {
+					$text = ltrim( (string) $value, '0' );
+					$text = '' === $text ? '0' : $text;
+					$maximum = (string) $rule['max'];
+					if ( ! preg_match( '/^[0-9]+$/D', (string) $value ) || strlen( $text ) > strlen( $maximum ) || ( strlen( $text ) === strlen( $maximum ) && strcmp( $text, $maximum ) > 0 ) || (int) $text < $rule['min'] ) {
 						$errors->add( $name, sprintf( '%sは%d～%dの整数で入力してください。', $name, $rule['min'], $rule['max'] ) );
 					} else {
-						$clean[ $name ] = (string) (int) $value;
+						$clean[ $name ] = (string) (int) $text;
 					}
 					break;
 				case 'id':
-					$clean[ $name ] = '' === (string) $value ? '' : (string) absint( $value );
+					$text = (string) $value;
+					$maximum = (string) PHP_INT_MAX;
+					if ( '' === $text ) {
+						$clean[ $name ] = '';
+					} elseif ( ! preg_match( '/^[1-9][0-9]*$/D', $text ) || strlen( $text ) > strlen( $maximum ) || ( strlen( $text ) === strlen( $maximum ) && strcmp( $text, $maximum ) > 0 ) ) {
+						$errors->add( $name, sprintf( '%sは正の整数IDで入力してください。', $name ) );
+					} else {
+						$clean[ $name ] = $text;
+					}
 					break;
 				case 'enum':
 					$clean[ $name ] = in_array( $value, $rule['values'], true ) ? $value : $rule['default'];

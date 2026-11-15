@@ -485,8 +485,25 @@ final class WelcartIntegration {
 			return;
 		}
 		if ( $pre_id ) {
-			$record_id = $wpdb->get_var( $wpdb->prepare( 'SELECT id FROM ' . Database::table( 'orders' ) . ' WHERE pre_order_id=%s', $pre_id ) );
-			if ( $record_id ) {
+			$record = $wpdb->get_row( $wpdb->prepare( 'SELECT id,order_id,status FROM ' . Database::table( 'orders' ) . ' WHERE pre_order_id=%s', $pre_id ) );
+			if ( $record ) {
+				if ( null !== $record->order_id ) {
+					if ( (int) $record->order_id !== $order_id ) {
+						Database::log( 'order_registration_conflict', array( 'record_id' => (int) $record->id ), 'error', $order_id, wp_generate_uuid4(), 365 );
+					} elseif ( 'confirmed' !== $record->status ) {
+						$restored = $wpdb->update(
+							Database::table( 'orders' ),
+							array( 'status' => 'confirmed', 'expires_at' => null, 'updated_at' => Database::now() ),
+							array( 'id' => $record->id, 'order_id' => $order_id ),
+							array( '%s', '%s', '%s' ),
+							array( '%d', '%d' )
+						);
+						if ( false === $restored ) {
+							Database::log( 'order_registration_failed', array( 'record_id' => (int) $record->id, 'db_failed' => true ), 'error', $order_id, wp_generate_uuid4(), 365 );
+						}
+					}
+					return;
+				}
 				$result = $wpdb->update(
 					Database::table( 'orders' ),
 					array(
@@ -495,16 +512,19 @@ final class WelcartIntegration {
 						'expires_at' => null,
 						'updated_at' => Database::now(),
 					),
-					array( 'id' => $record_id ),
+					array( 'id' => $record->id, 'order_id' => null ),
 					array( '%d', '%s', '%s', '%s' ),
-					array( '%d' )
+					array( '%d', '%d' )
 				);
-				// An unchanged confirmed row is an idempotent retry, not a database failure.
-				if ( false === $result ) {
+				if ( 1 !== $result ) {
+					$current_order_id = $wpdb->get_var( $wpdb->prepare( 'SELECT order_id FROM ' . Database::table( 'orders' ) . ' WHERE id=%d', $record->id ) );
+					if ( null !== $current_order_id && (int) $current_order_id === $order_id ) {
+						return;
+					}
 					Database::log(
 						'order_registration_failed',
 						array(
-							'record_id' => (int) $record_id,
+							'record_id' => (int) $record->id,
 							'db_failed' => false === $result,
 						),
 						'error',
@@ -519,9 +539,32 @@ final class WelcartIntegration {
 		if ( ! Settings::enabled() ) {
 			return;
 		}
+		$existing = $wpdb->get_row( $wpdb->prepare( 'SELECT id,pre_order_id FROM ' . Database::table( 'orders' ) . ' WHERE order_id=%d', $order_id ) );
+		if ( $existing ) {
+			if ( $pre_id && null === $existing->pre_order_id ) {
+				$linked = $wpdb->update(
+					Database::table( 'orders' ),
+					array( 'pre_order_id' => $pre_id, 'updated_at' => Database::now() ),
+					array( 'id' => $existing->id, 'pre_order_id' => null ),
+					array( '%s', '%s' ),
+					array( '%d', '%s' )
+				);
+				if ( 1 === $linked ) {
+					return;
+				}
+				$actual_pre_id = $wpdb->get_var( $wpdb->prepare( 'SELECT pre_order_id FROM ' . Database::table( 'orders' ) . ' WHERE id=%d', $existing->id ) );
+				if ( $pre_id === $actual_pre_id ) {
+					return;
+				}
+			}
+			if ( $pre_id && $existing->pre_order_id !== $pre_id ) {
+				Database::log( 'order_registration_conflict', array( 'record_id' => (int) $existing->id ), 'error', $order_id, wp_generate_uuid4(), 365 );
+			}
+			return;
+		}
 		if ( ! $pre_id ) {
 			$now    = Database::now();
-			$result = $wpdb->replace(
+			$result = $wpdb->insert(
 				Database::table( 'orders' ),
 				array(
 					'order_id'         => $order_id,
@@ -535,12 +578,15 @@ final class WelcartIntegration {
 				array( '%d', '%s', '%s', '%d', '%s', '%s', '%s' )
 			);
 			if ( false === $result ) {
-				Database::log( 'order_registration_failed', array( 'db_failed' => true ), 'error', $order_id, wp_generate_uuid4(), 365 );
+				$race = $wpdb->get_var( $wpdb->prepare( 'SELECT id FROM ' . Database::table( 'orders' ) . ' WHERE order_id=%d', $order_id ) );
+				if ( ! $race ) {
+					Database::log( 'order_registration_failed', array( 'db_failed' => true ), 'error', $order_id, wp_generate_uuid4(), 365 );
+				}
 			}
 			return;
 		}
 		$now    = Database::now();
-		$result = $wpdb->replace(
+		$result = $wpdb->insert(
 			Database::table( 'orders' ),
 			array(
 				'order_id'         => $order_id,
@@ -555,6 +601,10 @@ final class WelcartIntegration {
 			array( '%d', '%s', '%s', '%s', '%d', '%s', '%s', '%s' )
 		);
 		if ( false === $result ) {
+			$race = $wpdb->get_row( $wpdb->prepare( 'SELECT order_id FROM ' . Database::table( 'orders' ) . ' WHERE pre_order_id=%s', $pre_id ) );
+			if ( $race && null !== $race->order_id && (int) $race->order_id === $order_id ) {
+				return;
+			}
 			Database::log(
 				'order_registration_failed',
 				array(
